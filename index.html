@@ -14,13 +14,7 @@
 html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
-.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;display:flex;align-items:center;gap:10px;padding:12px 16px;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--ac),#8b5cf6);display:grid;place-items:center;font-size:20px}
-.top h1{margin:0;font-size:17px;line-height:1.1}.top small{color:var(--mu);font-size:11px}
-.sp{flex:1}
-.ib{width:38px;height:38px;border-radius:12px;background:var(--s1);border:1px solid var(--line);display:grid;place-items:center;font-weight:700}
-.pill{background:var(--ac);color:#fff;padding:9px 16px;border-radius:12px;font-weight:600;font-size:14px}
-main{max-width:900px;margin:0 auto;padding:16px}
+main{max-width:900px;margin:0 auto;padding:20px 16px 16px}
 .tab{display:none;animation:in .25s}.tab.on{display:block}
 @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .hero{border-radius:24px;padding:24px;background:radial-gradient(circle at 85% 10%,#4338ca66,transparent 50%),linear-gradient(160deg,#1e1b4b,var(--s1));border:1px solid var(--line);color:#e8ecf7}
@@ -32,9 +26,6 @@ main{max-width:900px;margin:0 auto;padding:16px}
 .grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
 .card{background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
 .card h3{margin:0;font-size:16px}.card p{margin:0;color:var(--mu);font-size:14px}
-.sys{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:16px}
-.sys button{background:var(--s1);border:1px solid var(--line);border-radius:16px;padding:14px 8px;text-align:center;font-size:13px;font-weight:600}
-.sys b{display:block;font-size:26px}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px}
 .ph h2{margin:0;font-size:22px}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
@@ -50,6 +41,12 @@ main{max-width:900px;margin:0 auto;padding:16px}
 .bg5{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
 .bd{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;opacity:.45;font-size:12px}
 .bd.u{opacity:1;border-color:#f59e0b88;background:#f59e0b14}.bd i{font-style:normal;font-size:26px;display:block}.bd p{margin:2px 0 0;color:var(--mu);font-size:11px}
+.st{display:inline-flex;font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px;width:fit-content}
+.st.red{background:#f43f5e24;color:var(--bad)}.st.green{background:#10b98124;color:var(--ok)}.st.blue{background:#3b82f624;color:#60a5fa}
+.card.red{border-color:#f43f5e77}.card.green{border-color:#10b98177}.card.blue{border-color:#3b82f677}
+.jn{padding:8px 14px;border-radius:12px;font-weight:700;font-size:13px;background:var(--ac);color:#fff}
+.jn.g{background:var(--s2);border:1px solid var(--line);color:var(--tx)}
+.jn[disabled]{opacity:.5;cursor:not-allowed}
 .fab{position:fixed;right:max(16px,calc(50% - 434px));bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:15;width:58px;height:58px;border-radius:20px;background:var(--ac);color:#fff;font-size:28px;box-shadow:0 10px 26px #6366f188;display:none}
 .fab.on{display:block}
 nav.bar{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line)}
@@ -86,28 +83,11 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 </style>
 </head>
 <body>
-<header class="top">
-<div class="logo">🎲</div>
-<div><h1>AVTC</h1><small>Antelope Valley Tabletop Club</small></div>
-<div class="sp"></div>
-<button class="ib" onclick="openSheet('sh-help')" aria-label="Help">?</button>
-<div id="auth-container"></div>
-</header>
 
 <main>
 <section id="tab-home" class="tab on">
-<div class="hero">
-<span class="tag">Lancaster &amp; Palmdale Wargamers</span>
-<h2>Muster your army. Find your next battle.</h2>
-<p>Local meetups, players looking for opponents, and a record of every game you play across the Antelope Valley.</p>
-<div class="row"><button class="btn" onclick="switchTab('meetups')">📅 Upcoming Meetups</button><button class="btn g" onclick="switchTab('lfg')">⚔️ Find an Opponent</button></div>
-</div>
-<div class="sys" id="sys-grid"></div>
-<div class="grid" style="margin-top:16px">
-<div class="card"><h3>📍 Local Meetups</h3><p>Club nights, campaigns and tournaments around Lancaster and the Antelope Valley.</p></div>
-<div class="card"><h3>🧭 Looking For Game</h3><p>Need an opponent for 40K, Kings of War or a Star Wars dogfight? Post a listing.</p></div>
-<div class="card"><h3>🏅 Battle Record</h3><p>Log your games, collect club badges and see what the community has been playing.</p></div>
-</div>
+<div class="hero" style="padding:18px"><span class="tag">🎲 AVTC • Antelope Valley Tabletop Club</span><h2 style="font-size:22px;margin:4px 0 0">News</h2><p style="margin:4px 0 0">Latest meetups, listings and games from the club.</p></div>
+<div id="news-list" class="list" style="margin-top:12px"></div>
 </section>
 
 <section id="tab-meetups" class="tab">
@@ -133,10 +113,13 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 
 <section id="tab-settings" class="tab">
 <div class="ph"><h2>Settings</h2></div>
-<div class="card" style="margin-bottom:12px"><h3>Account</h3><p id="set-user"></p><button class="btn g" onclick="handleLogout()">Sign Out</button></div>
+<div class="card" style="margin-bottom:12px"><h3>Account</h3><p id="set-user"></p>
+<label>Username</label><input id="set-username" maxlength="20" placeholder="3-20 letters, numbers or _" autocomplete="off">
+<p id="set-username-note"></p><div id="set-username-err" class="err"></div>
+<button class="btn" onclick="saveUsername()">Save Username</button>
+<button class="btn g" onclick="handleLogout()">Sign Out</button></div>
 <div class="card" style="margin-bottom:12px"><h3>Help</h3><p>Guides for every part of the app.</p><button class="btn g" onclick="openSheet('sh-help')">Open Help</button></div>
-<div class="card" style="margin-bottom:12px"><h3>What's New</h3><div id="updates-list"></div></div>
-<div class="card" style="margin-bottom:12px"><h3>About</h3><p id="about-info"></p></div>
+<div class="card" style="margin-bottom:12px"><h3>What's New</h3><p>Version info and recent changes.</p><button class="btn g" onclick="openSheet('sh-updates')">Open What's New</button></div>
 <div id="admin-settings-panel" class="card hid" style="border-color:#f43f5e66">
 <h3>🛡 Administrator Diagnostics</h3>
 <div id="db-status-banner" class="row" style="align-items:center;justify-content:space-between">
@@ -150,10 +133,11 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <button class="fab" id="fab" onclick="fabAction()" aria-label="Add">+</button>
 
 <nav class="bar"><div>
-<button data-tab="home" onclick="switchTab('home')"><span>🏠</span>Home</button>
+<button data-tab="home" onclick="switchTab('home')"><span>📰</span>News</button>
 <button data-tab="meetups" onclick="switchTab('meetups')"><span>📅</span>Meetups</button>
 <button data-tab="lfg" onclick="switchTab('lfg')"><span>⚔️</span>LFG</button>
-<button data-tab="stats" onclick="switchTab('stats')"><span>🏆</span>Record</button>
+<button data-tab="stats" id="nav-stats" class="hid" onclick="switchTab('stats')"><span>🏆</span>Record</button>
+<button id="nav-signin" onclick="openAuthModal('login')"><span>🔑</span>Sign In</button>
 <button data-tab="settings" id="nav-settings" class="hid" onclick="switchTab('settings')"><span>⚙️</span>Settings</button>
 </div></nav>
 
@@ -162,6 +146,7 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <form onsubmit="handleAuthSubmit(event)">
 <label>Email <button type="button" class="lnk" style="float:right;text-transform:none" onclick="handleForgotEmail()">Forgot?</button></label>
 <input type="email" id="auth-email" required placeholder="you@example.com" autocomplete="email">
+<div id="auth-user-wrap" class="hid"><label>Username</label><input id="auth-username" maxlength="20" autocomplete="username" placeholder="3-20 letters, numbers or _"></div>
 <label>Password</label>
 <input type="password" id="auth-password" required placeholder="••••••••" autocomplete="current-password">
 <label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="remember-login" style="width:auto"> Remember my email</label>
@@ -177,6 +162,8 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <label>Event Title</label><input id="meetup-title" required placeholder="e.g., Saturday 40K Throwdown">
 <label>Game System</label><select id="meetup-system"></select>
 <div class="two"><div><label>Date &amp; Time</label><input type="datetime-local" id="meetup-date" required></div><div><label>Venue</label><input id="meetup-location" required placeholder="Game store / library"></div></div>
+<div class="two"><div><label>Spots (2 or more)</label><input type="number" id="meetup-spots" min="2" value="4"></div><div><label>Needed to run</label><input type="number" id="meetup-min" min="1" value="2" required></div></div>
+<label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="meetup-unlimited" style="width:auto" onchange="$('meetup-spots').disabled=this.checked"> No limit on spots</label>
 <label>Details</label><textarea id="meetup-desc" rows="3" required placeholder="Points level, terrain, what to bring..."></textarea>
 <button class="btn full">Publish Meetup</button>
 </form></div></div>
@@ -207,10 +194,17 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <button class="btn g full" onclick="closeSheet('sh-help')">Close</button>
 </div></div>
 
+<div class="ov" id="sh-updates" onclick="if(event.target===this)closeSheet('sh-updates')"><div class="sheet"><div class="grab"></div>
+<h3>What's New</h3>
+<p id="about-info" style="color:var(--mu);font-size:13px;margin:0 0 14px"></p>
+<div id="updates-list"></div>
+<button class="btn g full" onclick="closeSheet('sh-updates')">Close</button>
+</div></div>
+
 <div id="toast"></div>
 
 <script>
-const VERSION='2.0.0',BUILT='2026-10-05 12:00 PM PT';
+const VERSION='2.7.0',BUILT='2026-10-05 11:30 PM PT';
 const SUPABASE_URL='https://cizwgastmjxupnyrwwoq.supabase.co';
 const SUPABASE_KEY='sb_publishable_udOIKINsu3-rZnyp9OiFnA_4qSNZxue';
 const ADMIN_EMAIL='maunderingcabal@gmail.com';
@@ -230,22 +224,35 @@ const ACHIEVEMENTS=[
 {id:'avtc_legend',name:'AVTC Legend',desc:'Log 10 games.',icon:'👑',n:10}
 ];
 const UPDATES=[
+{v:'2.7.0',d:'2026-10-05',t:['Meetups now have spots (2 or more, or no limit) and a number of players needed to run','Members can Join and Leave meetups; when seats are full no one else can join','Colour status: red needs players, green set but taking more players, blue seats full','Help updated']},
+{v:'2.6.2',d:'2026-10-05',t:['Posts always show a username, never an email: older posts that saved an email now show only the part before the @','You must choose a username before you can post']},
+{v:'2.6.1',d:'2026-10-05',t:['What\'s New is now a pop-up button in Settings, like Help','Version and build date and time moved into the What\'s New pop-up; the About card was removed']},
+{v:'2.6.0',d:'2026-10-05',t:['Pick a username when you create an account; it is shown on your posts instead of your email','Change your username in Settings once a month','Help updated with a Username section']},
+{v:'2.5.0',d:'2026-10-05',t:['Home is now a News feed showing the latest meetups, listings and games from the club','The old home menu tiles were removed','Help updated with a News section']},
+{v:'2.4.0',d:'2026-10-05',t:['Help is now only in Settings (removed from the bottom bar)','The Record tab is hidden until you sign in']},
+{v:'2.3.0',d:'2026-10-05',t:['Removed the top bar; Help and Sign In now live in the bottom bar, and Settings replaces Sign In after login','AVTC name and club title moved into the Home banner']},
+{v:'2.2.0',d:'2026-10-05',t:['Meetups, LFG listings and game logs are now saved to the club database and loaded from it, so every member sees the same posts','Game system is now saved with each post','You are told clearly if a post could only be saved on your device']},
+{v:'2.1.1',d:'2026-10-05',t:['Fixed admin delete failing when a database table is missing: the post is now removed locally and a clear message is shown']},
+{v:'2.1.0',d:'2026-10-05',t:['Admins can now delete LFG listings, in addition to meetups']},
 {v:'2.0.0',d:'2026-10-05',t:['Complete redesign with an app-style look: bottom tab bar, bottom-sheet forms and a floating add button','Game system selector for Warhammer, One Page Rules, BattleTech, Kings of War and X-Wing with filter chips','New login-only Settings tab with Help, What\'s New and version info','Expanded Help guide','Warlord badge now unlocks when you host a meetup or post a listing','Admins can delete meetups in offline mode too','Light and dark theme follow your device']},
 {v:'1.0.0',d:'2026-04-01',t:['Original release: meetups, LFG board, game logs, badges and Supabase login']}
 ];
 const HELP=[
-['Getting started','<p>Browse Home, Meetups, LFG and Record without an account. Tap Sign In (top right) to create an account. After signing in you can post, log games and open the Settings tab.</p>'],
-['Game systems','<p>Every meetup, listing and game log has a game system: Warhammer, One Page Rules, BattleTech, Kings of War, X-Wing or Other. Use the chips at the top of Meetups and LFG to filter by system. Tap a system tile on Home to jump straight to its meetups.</p>'],
-['Meetups','<ul><li>Sign in, open Meetups and tap the + button.</li><li>Pick the system, date and time, venue and add details such as points level or terrain.</li><li>Admins see a Delete button on each card.</li></ul>'],
-['Looking For Game (LFG)','<ul><li>Tap + on the LFG tab to post.</li><li>Say what format or points you want, how many opponents you need and your area.</li><li>Mention if painted armies are required and your availability.</li></ul>'],
-['Battle Record and badges','<p>Tap + on the Record tab to log a game. Badges: First Blood (1 game), Veteran (3), Dice Master (5), AVTC Legend (10) and Warlord (host a meetup or post a listing).</p><p>Game counts are stored in this browser for now, so they do not follow you to another device.</p>'],
-['Settings and updates','<p>The Settings tab appears once you sign in. It holds Help, What\'s New (every update), your account and the app version with its build date and time.</p>'],
-['Offline mode','<p>If the database cannot be reached the app keeps working with data saved on your device. Posts made this way are only visible on that device.</p>'],
-['Admins','<p>Admins see database status in Settings and can delete meetups.</p>']
+['Getting started','<p>Browse News, Meetups and LFG without an account. Use the bottom bar to move between sections. Tap Sign In in the bottom bar to create an account. After signing in the Record and Settings tabs appear and you can post and log games. Help is in Settings.</p>'],
+['Username','<p>When you create an account you pick a username (3-20 letters, numbers or underscores). It is shown on your posts instead of your email, and you need one before you can post. You can change it in Settings once a month. Posts you made earlier keep the old name. Usernames must be unique, ignoring capital letters.</p>'],
+['News','<p>The News tab is the home screen. It shows the latest club activity in one feed: new meetups, looking-for-game listings and games that members have played, newest first. Each item shows the game system, who posted it and how long ago. Tap an item to open its section (Record items open after you sign in).</p>'],
+['Game systems','<p>Every meetup, listing and game log has a game system: Warhammer, One Page Rules, BattleTech, Kings of War, X-Wing or Other. Use the chips at the top of Meetups and LFG to filter by system.</p>'],
+['Meetups','<ul><li>Sign in, open Meetups and tap the + button.</li><li>Pick the system, date and time, venue and details such as points level or terrain.</li><li>Set the number of spots (2 or more, any number) or tick No limit, and how many players are needed for the game to run. You count as the first player.</li><li>Members tap Join to take a seat and Leave to give it up. When the seats are full nobody else can join.</li><li>Card colours: red means it needs players, green means it is set but taking more players, blue means seats are full.</li><li>Admins see a Delete button on each card.</li></ul>'],
+['Looking For Game (LFG)','<ul><li>Tap + on the LFG tab to post.</li><li>Say what format or points you want, how many opponents you need and your area.</li><li>Mention if painted armies are required and your availability.</li><li>Admins see a Delete button on each listing.</li></ul>'],
+['Battle Record and badges','<p>The Record tab appears after you sign in. Tap + there to log a game. Badges: First Blood (1 game), Veteran (3), Dice Master (5), AVTC Legend (10) and Warlord (host a meetup or post a listing).</p><p>Game counts are stored in this browser for now, so they do not follow you to another device.</p>'],
+['Settings and updates','<p>The Settings tab appears once you sign in. It holds your account and username, Help, and What\'s New. What\'s New opens a pop-up with the app version, build date and time, and the list of updates.</p>'],
+['Offline mode','<p>When you are online and signed in with an account, meetups, listings and game logs are saved to the club database and everyone sees them. If the database cannot be reached, or a save fails, the app keeps the post on your device only and tells you.</p>'],
+['Admins','<p>Admins see database status in Settings and can delete meetups and LFG listings using the Delete button on each card. If the database table does not exist yet, the post is removed on this device only.</p>']
 ];
 let sb=null,online=false,user=null,authMode='login';
 const filt={meetups:'all',lfg:'all'};
 const soon=n=>{const d=new Date(Date.now()+n*864e5);d.setHours(18,0,0,0);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};
+const hrs=h=>new Date(Date.now()-h*36e5).toISOString();
 let meetups=[
 {id:'1',system:'wh',title:'Saturday 40K & Age of Sigmar Night',date:soon(4),location:'Lancaster Game Store',description:'Open play, 1000-2000pts. Terrain provided.',author:'AVTC Admin'},
 {id:'2',system:'xw',title:'X-Wing Squadron Skirmish',date:soon(7),location:'Quartz Hill Game Lounge',description:'Bring 200pt lists. Loaner ships available.',author:'Local Organizer'},
@@ -256,6 +263,13 @@ let lfg=[
 let logs=[
 {id:'1',system:'wh',game:'Only War',score:'Victory 82-61',players:2,notes:'Last turn charge saved the game.',author:'Marcus V.',date:'Yesterday'},
 {id:'2',system:'xw',game:'Dogfight',score:'Win (1 ship left)',players:2,notes:'',author:'Jessica M.',date:'2 days ago'}];
+meetups.forEach((m,i)=>{m.created_at=hrs(3+i*20)});
+const sp=a=>a.map(n=>({id:'seed_'+n,name:n}));
+Object.assign(meetups[0],{spots:6,min_players:4,players:sp(['Dave','Sarah'])});
+Object.assign(meetups[1],{spots:4,min_players:2,players:sp(['Marcus','Jessica','Dave'])});
+Object.assign(meetups[2],{spots:2,min_players:2,players:sp(['Marcus','Sarah'])});
+lfg.forEach((l,i)=>{l.created_at=hrs(8+i*30)});
+logs.forEach((g,i)=>{g.created_at=hrs(5+i*26)});
 const sys=id=>SYSTEMS.find(s=>s.id===id)||SYSTEMS[5];
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 const $=id=>document.getElementById(id);
@@ -265,7 +279,6 @@ const isAdmin=u=>!!u&&(u.email===ADMIN_EMAIL||(u.user_metadata&&u.user_metadata.
 
 window.addEventListener('DOMContentLoaded',async()=>{
  document.querySelectorAll('select[id$="-system"]').forEach(s=>s.innerHTML=SYSTEMS.map(x=>`<option value="${x.id}">${x.icon} ${x.name}</option>`).join(''));
- $('sys-grid').innerHTML=SYSTEMS.slice(0,5).map(x=>`<button onclick="filt.meetups='${x.id}';switchTab('meetups');renderMeetups()"><b>${x.icon}</b>${x.name}</button>`).join('');
  $('help-body').innerHTML=HELP.map((h,i)=>`<details ${i?'':'open'}><summary>${h[0]}</summary>${h[1]}</details>`).join('');
  $('updates-list').innerHTML=UPDATES.map(u=>`<div class="upd"><b>Version ${u.v}</b><small>${u.d}</small><ul>${u.t.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('');
  $('about-info').textContent=`AVTC App version ${VERSION} • Built ${BUILT}`;
@@ -281,7 +294,7 @@ function initSupabase(){
  try{
   if(window.supabase){
    sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-   sb.auth.onAuthStateChange((_e,s)=>{if(s&&s.user){user=s.user;updateAuthUI()}});
+   sb.auth.onAuthStateChange((_e,s)=>{if(s&&s.user&&(!user||user.id!==s.user.id)){user=s.user;loadProfile().then(updateAuthUI)}});
    testConnection();
   }else setOffline('Supabase SDK not loaded.');
  }catch(e){setOffline('Initialization error.')}
@@ -296,7 +309,8 @@ async function testConnection(){
   online=true;d.style.background='var(--ok)';
   $('status-text').textContent='Online';$('status-sub').textContent='Connected to Supabase.';
   const{data:{session}}=await sb.auth.getSession();
-  if(session&&session.user){user=session.user;updateAuthUI()}
+  if(session&&session.user){user=session.user;await loadProfile();updateAuthUI()}
+  await syncFromServer();
  }catch(e){setOffline('Using local storage fallback.')}
 }
 function setOffline(reason){
@@ -307,7 +321,7 @@ function setOffline(reason){
 }
 
 function switchTab(id){
- if(id==='settings'&&!user)id='home';
+ if((id==='settings'||id==='stats')&&!user)id='home';
  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.id==='tab-'+id));
  document.querySelectorAll('nav.bar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));
  const fab=$('fab');
@@ -327,7 +341,7 @@ function closeSheet(id){$(id).classList.remove('on')}
 async function checkUserSession(){
  if(online&&sb){
   const{data:{session}}=await sb.auth.getSession();
-  if(session&&session.user)user=session.user;
+  if(session&&session.user){user=session.user;await loadProfile()}
  }else{
   const s=read('avtc_local_user');
   if(s){try{user=JSON.parse(s)}catch(e){}}
@@ -335,29 +349,31 @@ async function checkUserSession(){
  updateAuthUI();
 }
 function updateAuthUI(){
- const c=$('auth-container');
  if(user){
-  const name=esc((user.email||'Member').split('@')[0]);
-  c.innerHTML=`<button class="ib" onclick="switchTab('settings')" aria-label="Settings" title="${name}">${name.charAt(0).toUpperCase()}</button>`;
   $('nav-settings').classList.remove('hid');
+  $('nav-signin').classList.add('hid');
+  $('nav-stats').classList.remove('hid');
   $('user-profile-stats').classList.remove('hid');
-  $('set-user').textContent='Signed in as '+(user.email||'Member');
+  renderAccount();
   renderUserStats();
  }else{
-  c.innerHTML=`<button class="pill" onclick="openAuthModal('login')">Sign In</button>`;
   $('nav-settings').classList.add('hid');
+  $('nav-signin').classList.remove('hid');
+  $('nav-stats').classList.add('hid');
   $('user-profile-stats').classList.add('hid');
   if($('tab-settings').classList.contains('on'))switchTab('home');
  }
  $('admin-settings-panel').classList.toggle('hid',!isAdmin(user));
  const cur=document.querySelector('.tab.on');
  if(cur)switchTab(cur.id.replace('tab-',''));
- renderMeetups();
+ renderMeetups();renderLfg();
 }
 function openAuthModal(mode){
  authMode=mode;
  $('auth-error').style.display='none';
  const login=mode==='login';
+ $('auth-user-wrap').classList.toggle('hid',login);
+ $('auth-username').required=!login;
  $('auth-title').textContent=login?'Sign In to AVTC':'Create AVTC Account';
  $('auth-submit-btn').textContent=login?'Sign In':'Register';
  $('auth-switch-text').textContent=login?"Don't have an account?":'Already have an account?';
@@ -369,22 +385,36 @@ function toggleAuthMode(){openAuthModal(authMode==='login'?'signup':'login')}
 async function handleAuthSubmit(e){
  e.preventDefault();
  const email=$('auth-email').value,password=$('auth-password').value,err=$('auth-error');
+ const uname=$('auth-username').value.trim();
  err.style.display='none';
+ const showErr=m=>{err.textContent=m;err.style.display='block'};
+ if(authMode==='signup'){
+  if(!NAME_RE.test(uname)){showErr('Username must be 3-20 letters, numbers or underscores.');return}
+  if(online&&sb){
+   const{data:t}=await sb.from('profiles').select('id').eq('username_key',uname.toLowerCase()).maybeSingle();
+   if(t){showErr('That username is taken.');return}
+  }
+ }
  if($('remember-login').checked)store('avtc_remembered_email',email);
  else try{localStorage.removeItem('avtc_remembered_email')}catch(x){}
  if(online&&sb){
   try{
-   const r=authMode==='login'?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password});
+   const r=authMode==='login'?await sb.auth.signInWithPassword({email,password}):await sb.auth.signUp({email,password,options:{data:{username:uname}}});
    if(r.error)throw r.error;
    user=r.data.user;
    toast(authMode==='login'?'Signed in!':'Account created!');
   }catch(x){err.textContent=x.message||'Authentication error.';err.style.display='block';return}
  }else{
-  user={id:'local_'+Date.now(),email};
+  let prev=null;
+  try{prev=JSON.parse(read('avtc_local_user'))}catch(x){}
+  user=prev&&prev.email===email?prev:{id:'local_'+Date.now(),email};
+  if(authMode==='signup'&&uname)user.username=uname;
   store('avtc_local_user',JSON.stringify(user));
   toast('Signed in (offline mode)');
  }
- closeAuthModal();updateAuthUI();loadAllData();
+ await loadProfile();
+ closeAuthModal();updateAuthUI();await syncFromServer();loadAllData();
+ if(!user.username){switchTab('settings');toast('Please choose a username')}
 }
 async function handleForgotEmail(){
  const em=$('auth-email').value.trim();
@@ -403,6 +433,106 @@ async function handleLogout(){
  user=null;updateAuthUI();switchTab('home');toast('Signed out');
 }
 
+async function saveRemote(table,row){
+ if(!online||!sb)return '';
+ const{error}=await sb.from(table).insert([row]);
+ if(error){console.warn(table,error.message);return error.message}
+ return '';
+}
+async function pull(table,key,order,asc,set){
+ const{data,error}=await sb.from(table).select('*').order(order,{ascending:asc}).limit(200);
+ if(error){console.warn(table,error.message);return false}
+ set(data);store(key,JSON.stringify(data));return true;
+}
+async function syncFromServer(){
+ if(!online||!sb)return;
+ const okM=await pull('meetups','avtc_meetups','date',true,v=>{meetups=v});
+ await pull('lfg_listings','avtc_lfg','created_at',false,v=>{lfg=v});
+ await pull('game_logs','avtc_logs','created_at',false,v=>{logs=v});
+ if(okM){
+  const{data:pl,error:pe}=await sb.from('meetup_players').select('*');
+  meetups.forEach(m=>{m.players=pe?[]:(pl||[]).filter(x=>x.meetup_id===m.id).map(x=>({id:x.user_id,name:x.username}))});
+  store('avtc_meetups',JSON.stringify(meetups));
+ }
+ loadAllData();
+}
+function logDate(d){return /^\d{4}-/.test(d||'')?new Date(d).toLocaleDateString('en-US',{dateStyle:'medium'}):(d||'')}
+
+function timeAgo(t){
+ if(!t)return '';
+ const m=Math.max(1,Math.round((Date.now()-t)/6e4));
+ if(m<60)return m+'m ago';
+ const h=Math.round(m/60);
+ return h<48?h+'h ago':Math.round(h/24)+'d ago';
+}
+function renderNews(){
+ const ts=x=>Date.parse(x.created_at)||(+x.id>1e12?+x.id:0);
+ const items=[].concat(
+  meetups.map(m=>({ts:ts(m),tab:'meetups',head:'📅 New meetup',title:m.title,sub:fmtDate(m.date)+' • '+m.location,system:m.system,by:m.author})),
+  lfg.map(l=>({ts:ts(l),tab:'lfg',head:'⚔️ Looking for game',title:l.game,sub:l.players+' • '+l.location,system:l.system,by:l.author})),
+  logs.map(g=>({ts:ts(g),tab:'stats',head:'🏆 Game played',title:g.game,sub:'Result: '+g.score+' • '+g.players+' players',system:g.system,by:g.author}))
+ ).sort((a,b)=>b.ts-a.ts).slice(0,20);
+ $('news-list').innerHTML=items.length?items.map(i=>{
+  const y=sys(i.system);
+  return `<button class="card" style="text-align:left" onclick="switchTab('${i.tab}')"><div class="row" style="justify-content:space-between"><span class="badge">${y.icon} ${y.name}</span><small style="color:var(--mu)">${esc(timeAgo(i.ts))}</small></div><small style="color:var(--ac2);font-weight:700">${i.head}</small><h3>${esc(i.title)}</h3><p>${esc(i.sub)}</p><small style="color:var(--mu)">By ${esc(shownAuthor(i.by))}</small></button>`}).join(''):'<div class="empty">Nothing new yet. Check back soon!</div>';
+}
+
+function shownAuthor(a){
+ a=String(a||'Member');
+ return a.includes('@')?a.split('@')[0]:a;
+}
+function needName(){
+ if(user&&user.username)return false;
+ document.querySelectorAll('.ov').forEach(o=>o.classList.remove('on'));
+ switchTab('settings');
+ toast('Choose a username before posting');
+ return true;
+}
+const NAME_RE=/^[A-Za-z0-9_]{3,20}$/;
+function displayName(){return user?(user.username||(user.email||'Member').split('@')[0]):'Anonymous'}
+function isLocal(){return !user||String(user.id).startsWith('local')}
+function nextChange(){
+ const t=user&&user.username_changed_at?Date.parse(user.username_changed_at)+30*864e5:0;
+ return t>Date.now()?t:0;
+}
+function fmtDay(t){return new Date(t).toLocaleDateString('en-US',{dateStyle:'medium'})}
+async function loadProfile(){
+ if(!user||isLocal()||!online||!sb)return;
+ const{data}=await sb.from('profiles').select('username,username_changed_at').eq('id',user.id).maybeSingle();
+ if(data){user.username=data.username;user.username_changed_at=data.username_changed_at;user.hasProfile=true}
+ else user.hasProfile=false;
+}
+function renderAccount(){
+ if(!user)return;
+ $('set-user').textContent='Signed in as '+(user.email||'Member');
+ $('set-username').value=user.username||'';
+ const nx=nextChange();
+ $('set-username-note').textContent=!user.username?'Choose a username. It is shown on your posts.':(nx?'You can change your username again on '+fmtDay(nx)+'.':'You can change your username once a month. Past posts keep the old name.');
+}
+async function saveUsername(){
+ const name=$('set-username').value.trim(),err=$('set-username-err');
+ err.style.display='none';
+ const fail=m=>{err.textContent=m;err.style.display='block'};
+ if(!NAME_RE.test(name))return fail('Use 3-20 letters, numbers or underscores.');
+ if(name===user.username)return fail('That is already your username.');
+ const nx=nextChange();
+ if(user.username&&nx)return fail('You can change it again on '+fmtDay(nx)+'.');
+ if(online&&sb&&!isLocal()){
+  const{data:taken}=await sb.from('profiles').select('id').eq('username_key',name.toLowerCase()).neq('id',user.id).maybeSingle();
+  if(taken)return fail('That username is taken.');
+  const q=user.hasProfile?sb.from('profiles').update({username:name}).eq('id',user.id):sb.from('profiles').insert([{id:user.id,username:name}]);
+  const{error}=await q;
+  if(error)return fail(/duplicate|unique/i.test(error.message)?'That username is taken.':error.message);
+  await loadProfile();
+ }else{
+  const had=!!user.username;
+  user.username=name;
+  if(had)user.username_changed_at=new Date().toISOString();
+  store('avtc_local_user',JSON.stringify(user));
+ }
+ renderAccount();toast('Username saved');
+}
+
 function loadAllData(){renderMeetups();renderLfg();renderGameLogs()}
 function chips(tab){
  const el=$('chips-'+tab);
@@ -412,13 +542,15 @@ function fmtDate(d){return d?new Date(d).toLocaleString('en-US',{dateStyle:'medi
 
 async function handleCreateMeetup(e){
  e.preventDefault();
- const m={id:Date.now().toString(),system:$('meetup-system').value,title:$('meetup-title').value,date:$('meetup-date').value,location:$('meetup-location').value,description:$('meetup-desc').value,author:user?(user.email||'Club Member'):'Anonymous'};
- if(online&&sb){
-  const{system,...row}=m;
-  try{const{error}=await sb.from('meetups').insert([row]);if(error)throw error}catch(x){console.warn(x.message)}
- }
+ if(needName())return;
+ const unl=$('meetup-unlimited').checked,spots=unl?null:parseInt($('meetup-spots').value),min=parseInt($('meetup-min').value);
+ if(!unl&&!(spots>=2)){toast('Spots must be 2 or more');return}
+ if(!(min>=1)||(!unl&&min>spots)){toast('Players needed must be between 1 and the number of spots');return}
+ const m={id:Date.now().toString(),created_at:new Date().toISOString(),system:$('meetup-system').value,spots,min_players:min,players:[{id:user.id,name:displayName()}],title:$('meetup-title').value,date:$('meetup-date').value,location:$('meetup-location').value,description:$('meetup-desc').value,author:displayName()};
+ const dbErr=await saveRemote('meetups',(({players,...row})=>row)(m));
+ if(!dbErr&&online&&sb&&!isLocal())await sb.from('meetup_players').insert([{meetup_id:m.id,user_id:user.id,username:displayName()}]);
  meetups.unshift(m);store('avtc_meetups',JSON.stringify(meetups));
- closeSheet('sh-meetup');e.target.reset();renderMeetups();markHosted();toast('Meetup posted!');
+ closeSheet('sh-meetup');e.target.reset();$('meetup-spots').disabled=false;renderMeetups();markHosted();toast(dbErr?'Saved on this device only: '+dbErr:'Meetup posted!');
 }
 function renderMeetups(){
  const saved=read('avtc_meetups');if(saved){try{meetups=JSON.parse(saved)}catch(x){}}
@@ -426,20 +558,20 @@ function renderMeetups(){
  const list=meetups.filter(m=>filt.meetups==='all'||m.system===filt.meetups);
  $('meetups-list').innerHTML=list.length?list.map(m=>{
   const s=sys(m.system);
-  return `<div class="card"><span class="badge">${s.icon} ${s.name}</span><h3>${esc(m.title)}</h3><p>${esc(m.description)}</p>
-  <p>🕐 ${esc(fmtDate(m.date))}</p><p>📍 ${esc(m.location)}</p>
-  <div class="meta"><span>By ${esc(m.author||'Member')}</span>${isAdmin(user)?`<button class="del" onclick="deleteEvent('${esc(m.id)}')">Delete</button>`:''}</div></div>`}).join(''):'<div class="empty">No meetups here yet. Sign in and host one!</div>';
+  const i=meetupInfo(m);
+  const mine=!!user&&i.list.some(p=>p.id===user.id);
+  const id=esc(m.id);
+  const act=mine?`<button class="jn g" onclick="leaveMeetup('${id}')">Leave</button>`:i.full?`<button class="jn" disabled>Full</button>`:`<button class="jn" onclick="joinMeetup('${id}')">${user?'Join':'Sign in to join'}</button>`;
+  return `<div class="card ${i.cls}"><div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="st ${i.cls}">${i.label}</span></div><h3>${esc(m.title)}</h3><p>${esc(m.description)}</p><p>🕐 ${esc(fmtDate(m.date))}</p><p>📍 ${esc(m.location)}</p><p>👥 ${i.n}${i.spots?' / '+i.spots:''} players${i.spots?'':' (no limit)'} • needs ${i.min} to run</p>${i.n?`<p>${i.list.map(p=>esc(shownAuthor(p.name))).join(', ')}</p>`:''}<div class="meta"><span>By ${esc(shownAuthor(m.author))}</span><span class="row">${act}${isAdmin(user)?`<button class="del" onclick="deleteEvent('${id}')">Delete</button>`:''}</span></div></div>`}).join(''):'<div class="empty">No meetups here yet. Sign in and host one!</div>';
 }
 
 async function handleCreateLfg(e){
  e.preventDefault();
- const l={id:Date.now().toString(),system:$('lfg-system').value,game:$('lfg-game').value,players:$('lfg-players').value,location:$('lfg-location').value,description:$('lfg-desc').value,author:user?(user.email||'Club Member'):'Anonymous'};
- if(online&&sb){
-  const{system,...row}=l;
-  try{const{error}=await sb.from('lfg_listings').insert([row]);if(error)throw error}catch(x){console.warn(x.message)}
- }
+ if(needName())return;
+ const l={id:Date.now().toString(),created_at:new Date().toISOString(),system:$('lfg-system').value,game:$('lfg-game').value,players:$('lfg-players').value,location:$('lfg-location').value,description:$('lfg-desc').value,author:displayName()};
+ const dbErr=await saveRemote('lfg_listings',l);
  lfg.unshift(l);store('avtc_lfg',JSON.stringify(lfg));
- closeSheet('sh-lfg');e.target.reset();renderLfg();markHosted();toast('Listing posted!');
+ closeSheet('sh-lfg');e.target.reset();renderLfg();markHosted();toast(dbErr?'Saved on this device only: '+dbErr:'Listing posted!');
 }
 function renderLfg(){
  const saved=read('avtc_lfg');if(saved){try{lfg=JSON.parse(saved)}catch(x){}}
@@ -449,27 +581,25 @@ function renderLfg(){
   const s=sys(l.system);
   return `<div class="card"><div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="badge" style="color:var(--ac2)">${esc(l.players)}</span></div>
   <h3>${esc(l.game)}</h3><p>${esc(l.description)}</p>
-  <div class="meta"><span>📍 ${esc(l.location)}</span><span>By ${esc(l.author)}</span></div></div>`}).join(''):'<div class="empty">No listings for this system right now.</div>';
+  <div class="meta"><span>📍 ${esc(l.location)}</span><span>By ${esc(shownAuthor(l.author))}</span>${isAdmin(user)?`<button class="del" onclick="deleteLfg('${esc(l.id)}')">Delete</button>`:''}</div></div>`}).join(''):'<div class="empty">No listings for this system right now.</div>';
 }
 
 async function handleLogGameSubmit(e){
  e.preventDefault();
- const g={id:Date.now().toString(),system:$('log-system').value,game:$('log-game-title').value,score:$('log-game-score').value,players:parseInt($('log-game-players').value),notes:$('log-game-notes').value,author:user?(user.email||'Club Member'):'Anonymous',date:'Just now'};
- if(online&&sb){
-  const{system,...row}=g;
-  try{const{error}=await sb.from('game_logs').insert([row]);if(error)throw error}catch(x){console.warn(x.message)}
- }
+ if(needName())return;
+ const g={id:Date.now().toString(),created_at:new Date().toISOString(),system:$('log-system').value,game:$('log-game-title').value,score:$('log-game-score').value,players:parseInt($('log-game-players').value),notes:$('log-game-notes').value,author:displayName(),date:new Date().toISOString()};
+ const dbErr=await saveRemote('game_logs',g);
  logs.unshift(g);store('avtc_logs',JSON.stringify(logs));
  store('avtc_user_games_count',String(parseInt(read('avtc_user_games_count')||'0')+1));
  closeSheet('sh-log');e.target.reset();$('log-game-players').value=2;
- renderGameLogs();renderUserStats();toast('Game logged!');
+ renderGameLogs();renderUserStats();toast(dbErr?'Saved on this device only: '+dbErr:'Game logged!');
 }
 function renderGameLogs(){
  const saved=read('avtc_logs');if(saved){try{logs=JSON.parse(saved)}catch(x){}}
  $('game-logs-list').innerHTML=logs.length?logs.map(g=>{
   const s=sys(g.system);
   return `<div class="log"><div><b>${s.icon} ${esc(g.game)}</b><br><small>Result: ${esc(g.score)}</small>${g.notes?`<br><small><i>"${esc(g.notes)}"</i></small>`:''}</div>
-  <div style="text-align:right"><small>${esc(g.players)} players<br>${esc(g.author)} • ${esc(g.date)}</small></div></div>`}).join(''):'<div class="empty">No games logged yet.</div>';
+  <div style="text-align:right"><small>${esc(g.players)} players<br>${esc(shownAuthor(g.author))} • ${esc(logDate(g.date))}</small></div></div>`}).join(''):'<div class="empty">No games logged yet.</div>';
 }
 function renderUserStats(){
  const n=parseInt(read('avtc_user_games_count')||'0'),hosted=read('avtc_hosted_activity')==='true';
@@ -483,15 +613,79 @@ function renderUserStats(){
 function markHosted(){store('avtc_hosted_activity','true');renderUserStats()}
 
 async function deleteEvent(id){
+ let missing=false;
  if(!isAdmin(user)){alert('Unauthorized: admins only.');return}
  if(online&&sb){
   const{error}=await sb.from('meetups').delete().eq('id',id);
-  if(error){toast('Delete failed: '+error.message);return}
+  if(error){
+   if(!missingTable(error)){toast('Delete failed: '+error.message);return}
+   missing=true;
+  }
  }
  meetups=meetups.filter(m=>m.id!==id);
  store('avtc_meetups',JSON.stringify(meetups));
- renderMeetups();toast('Meetup deleted');
+ renderMeetups();toast(missing?'Removed on this device only (database table missing)':'Meetup deleted');
 }
+
+const missingTable=e=>/schema cache|does not exist|Could not find the table/i.test((e&&e.message)||'');
+
+function meetupInfo(m){
+ const list=Array.isArray(m.players)?m.players:[];
+ const spots=m.spots?+m.spots:0;
+ const min=+m.min_players||1;
+ const n=list.length;
+ const full=spots>0&&n>=spots;
+ let cls,label;
+ if(full){cls='blue';label='🔵 Seats full'}
+ else if(n>=min){cls='green';label='🟢 Set, but taking more players'}
+ else{cls='red';label='🔴 Needs players'}
+ return{list,spots,min,n,full,cls,label};
+}
+async function joinMeetup(id){
+ if(!user){openAuthModal('login');return}
+ if(needName())return;
+ const m=meetups.find(x=>x.id===id);
+ if(!m)return;
+ m.players=m.players||[];
+ if(m.players.some(p=>p.id===user.id))return;
+ if(meetupInfo(m).full){toast('Seats full');return}
+ if(online&&sb&&!isLocal()){
+  const{error}=await sb.from('meetup_players').insert([{meetup_id:id,user_id:user.id,username:displayName()}]);
+  if(error){toast(/full/i.test(error.message)?'Seats full':'Could not join: '+error.message);await syncFromServer();return}
+ }
+ m.players.push({id:user.id,name:displayName()});
+ store('avtc_meetups',JSON.stringify(meetups));
+ renderMeetups();toast('You joined!');
+}
+async function leaveMeetup(id){
+ if(!user)return;
+ const m=meetups.find(x=>x.id===id);
+ if(!m)return;
+ if(online&&sb&&!isLocal()){
+  const{error}=await sb.from('meetup_players').delete().eq('meetup_id',id).eq('user_id',user.id);
+  if(error){toast('Could not leave: '+error.message);return}
+ }
+ m.players=(m.players||[]).filter(p=>p.id!==user.id);
+ store('avtc_meetups',JSON.stringify(meetups));
+ renderMeetups();toast('You left the meetup');
+}
+
+async function deleteLfg(id){
+ let missing=false;
+ if(!isAdmin(user)){alert('Unauthorized: admins only.');return}
+ if(online&&sb){
+  const{error}=await sb.from('lfg_listings').delete().eq('id',id);
+  if(error){
+   if(!missingTable(error)){toast('Delete failed: '+error.message);return}
+   missing=true;
+  }
+ }
+ lfg=lfg.filter(l=>l.id!==id);
+ store('avtc_lfg',JSON.stringify(lfg));
+ renderLfg();toast(missing?'Removed on this device only (database table missing)':'Listing deleted');
+}
+
+['renderMeetups','renderLfg','renderGameLogs'].forEach(n=>{const f=window[n];window[n]=function(){f.apply(this,arguments);renderNews()}});
 
 let tt;
 function toast(msg){
