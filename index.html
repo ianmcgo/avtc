@@ -3,86 +3,102 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0b0f1a">
+<meta name="theme-color" content="#03060f">
 <title>AVTC - Antelope Valley Tabletop Club</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#0b0f1a;--s1:#141a2b;--s2:#1c2438;--line:#2a3350;--tx:#e8ecf7;--mu:#8a94b0;--ac:#6366f1;--ac2:#f59e0b;--ok:#10b981;--bad:#f43f5e;color-scheme:dark;box-sizing:border-box}
-@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#f1f4fb;--s1:#fff;--s2:#eef1f9;--line:#d5dbec;--tx:#141a2b;--mu:#5d6785;color-scheme:light}}
-:root[data-theme="dark"]{--bg:#0b0f1a}
+:root{--bg:#03060f;--s1:#0a1424;--s2:#0f1d33;--line:#1b4a6b;--tx:#d6f4ff;--mu:#7fa6bf;--ac:#00d4ff;--ac2:#ffb020;--ok:#2dffa0;--bad:#ff4d6d;--op:78%;--hd:"Orbitron","Eurostile","Bank Gothic","Segoe UI",system-ui,sans-serif;color-scheme:dark;box-sizing:border-box}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-padding-top:env(safe-area-inset-top,0px)}
-body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+html{background:radial-gradient(ellipse at 18% 8%,#0b2a4a66,transparent 55%),radial-gradient(ellipse at 88% 92%,#3a0f5a55,transparent 55%),var(--bg);background-attachment:fixed;scroll-padding-top:env(safe-area-inset-top,0px)}
+#space{position:fixed;inset:0;width:100%;height:100%;z-index:-1}
+body{margin:0;background:transparent;color:var(--tx);font:600 16px/1.4 "Rajdhani","Segoe UI",system-ui,-apple-system,Roboto,sans-serif;letter-spacing:.02em;padding-top:env(safe-area-inset-top,0px);padding-bottom:calc(88px + env(safe-area-inset-bottom,0px))}
 button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
 main{max-width:900px;margin:0 auto;padding:20px 16px 16px}
 .tab{display:none;animation:in .25s}.tab.on{display:block}
 @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-.hero{border-radius:24px;padding:24px;background:radial-gradient(circle at 85% 10%,#4338ca66,transparent 50%),linear-gradient(160deg,#1e1b4b,var(--s1));border:1px solid var(--line);color:#e8ecf7}
-.hero h2{margin:6px 0 8px;font-size:26px;line-height:1.15}.hero p{color:#b6bfd8;margin:0 0 16px}
-.tag{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#a5b4fc}
+.card,.hero,.log,.stat div,.bd,details{background:color-mix(in srgb,var(--s1) var(--op),transparent);border:1px solid var(--line);border-radius:3px;backdrop-filter:blur(5px)}
+.card,.hero{position:relative}
+.card::before,.hero::before,.card::after,.hero::after{content:"";position:absolute;width:13px;height:13px;border:2px solid var(--ac);pointer-events:none;filter:drop-shadow(0 0 4px var(--ac))}
+.card::before,.hero::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+.card::after,.hero::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+.hero{padding:24px;background:linear-gradient(135deg,#00d4ff26,transparent 60%),color-mix(in srgb,var(--s1) var(--op),transparent);color:var(--tx)}
+.hero h2{margin:6px 0 8px;font-size:26px;line-height:1.15}.hero p{color:var(--mu);margin:0 0 16px}
+h2,h3,.tag,label,.btn,.jn,.chip,.st,.badge,summary,nav.bar button,#toast,.del{font-family:var(--hd)}
+.tag{font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ac)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
-.btn{padding:11px 18px;border-radius:14px;font-weight:600;background:var(--ac);color:#fff}
-.btn.g{background:var(--s2);border:1px solid var(--line);color:var(--tx)}
-.grid{display:grid;gap:12px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
-.card{background:var(--s1);border:1px solid var(--line);border-radius:18px;padding:16px;display:flex;flex-direction:column;gap:8px}
-.card h3{margin:0;font-size:16px}.card p{margin:0;color:var(--mu);font-size:14px}
+.btn{padding:11px 18px;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(180deg,#00d4ffdd,#0086b8dd);color:#00131c;clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
+.btn.g{background:color-mix(in srgb,var(--s2) var(--op),transparent);color:var(--tx);box-shadow:inset 0 0 0 1px var(--line)}
+.grid{display:grid;gap:14px;grid-template-columns:repeat(auto-fill,minmax(250px,1fr))}
+.card{padding:16px;display:flex;flex-direction:column;gap:8px}
+.card h3{margin:0;font-size:14px;letter-spacing:.08em;text-transform:uppercase;color:var(--ac)}.card p{margin:0;color:var(--mu);font-size:15px}
 .ph{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:4px 0 12px}
-.ph h2{margin:0;font-size:22px}
+.ph h2{margin:0;font-size:19px;letter-spacing:.14em;text-transform:uppercase;text-shadow:0 0 12px var(--ac)}
 .chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
-.chip{flex:none;padding:7px 14px;border-radius:99px;background:var(--s1);border:1px solid var(--line);font-size:13px;font-weight:600;color:var(--mu)}
-.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
-.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;background:var(--s2);width:fit-content}
-.meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--mu);border-top:1px solid var(--line);padding-top:8px;margin-top:auto}
-.del{background:#f43f5e22;color:var(--bad);padding:3px 10px;border-radius:8px;font-weight:700;font-size:12px}
+.chip{flex:none;padding:8px 18px;background:color-mix(in srgb,var(--s1) var(--op),transparent);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu);clip-path:polygon(7px 0,100% 0,calc(100% - 7px) 100%,0 100%)}
+.chip.on{background:var(--ac);color:#00131c}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:700;letter-spacing:.06em;padding:3px 10px;border-radius:2px;background:color-mix(in srgb,var(--s2) var(--op),transparent);border:1px solid var(--line);width:fit-content}
+.meta{display:flex;justify-content:space-between;gap:8px;font-size:13px;color:var(--mu);border-top:1px solid var(--line);padding-top:8px;margin-top:auto}
+.del{background:#ff4d6d22;color:var(--bad);padding:4px 10px;border-radius:2px;border:1px solid #ff4d6d77;font-weight:700;font-size:10px;letter-spacing:.08em}
 .empty{grid-column:1/-1;text-align:center;color:var(--mu);padding:40px 0}
 .stat{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.stat div{background:var(--s2);border-radius:14px;padding:12px}.stat small{color:var(--mu);font-size:11px;display:block}.stat b{font-size:22px}
+.stat div{padding:12px}.stat small{color:var(--mu);font-size:12px;display:block}.stat b{font-size:22px;font-family:var(--hd)}
 .bg5{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
-.bd{background:var(--s2);border:1px solid var(--line);border-radius:14px;padding:12px;text-align:center;opacity:.45;font-size:12px}
-.bd.u{opacity:1;border-color:#f59e0b88;background:#f59e0b14}.bd i{font-style:normal;font-size:26px;display:block}.bd p{margin:2px 0 0;color:var(--mu);font-size:11px}
-.st{display:inline-flex;font-size:12px;font-weight:800;padding:4px 10px;border-radius:99px;width:fit-content}
-.st.red{background:#f43f5e24;color:var(--bad)}.st.green{background:#10b98124;color:var(--ok)}.st.blue{background:#3b82f624;color:#60a5fa}
-.card.red{border-color:#f43f5e77}.card.green{border-color:#10b98177}.card.blue{border-color:#3b82f677}
-.jn{padding:8px 14px;border-radius:12px;font-weight:700;font-size:13px;background:var(--ac);color:#fff}
-.jn.g{background:var(--s2);border:1px solid var(--line);color:var(--tx)}
+.bd{padding:12px;text-align:center;opacity:.45;font-size:13px}
+.bd.u{opacity:1;border-color:#ffb020aa;box-shadow:0 0 14px #ffb02033}.bd i{font-style:normal;font-size:26px;display:block}.bd p{margin:2px 0 0;color:var(--mu);font-size:12px}
+.st{display:inline-flex;font-size:9px;font-weight:700;letter-spacing:.06em;padding:4px 10px;border-radius:2px;width:fit-content;text-transform:uppercase}
+.st.red{background:#ff4d6d26;color:var(--bad)}.st.green{background:#2dffa026;color:var(--ok)}.st.blue{background:#3b82f62e;color:#7db8ff}
+.card.red{border-color:#ff4d6d99}.card.green{border-color:#2dffa099}.card.blue{border-color:#3b82f6aa}
+.jn{padding:8px 14px;font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;background:linear-gradient(180deg,#00d4ffdd,#0086b8dd);color:#00131c;clip-path:polygon(7px 0,100% 0,100% calc(100% - 7px),calc(100% - 7px) 100%,0 100%,0 7px)}
+.jn.g{background:color-mix(in srgb,var(--s2) var(--op),transparent);box-shadow:inset 0 0 0 1px var(--line);color:var(--tx)}
 .jn[disabled]{opacity:.5;cursor:not-allowed}
-.fab{position:fixed;right:max(16px,calc(50% - 434px));bottom:calc(90px + env(safe-area-inset-bottom,0px));z-index:15;width:58px;height:58px;border-radius:20px;background:var(--ac);color:#fff;font-size:28px;box-shadow:0 10px 26px #6366f188;display:none}
+.fab{position:fixed;right:max(16px,calc(50% - 434px));bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:15;width:58px;height:58px;border-radius:50%;background:color-mix(in srgb,var(--s1) 85%,transparent);border:2px solid var(--ac);color:var(--ac);font-size:30px;box-shadow:0 0 18px #00d4ff88,inset 0 0 14px #00d4ff44;display:none}
 .fab.on{display:block}
-nav.bar{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--line)}
+nav.bar{position:fixed;left:0;right:0;bottom:0;z-index:25;display:flex;justify-content:center;padding:8px 12px calc(8px + env(safe-area-inset-bottom,0px));background:color-mix(in srgb,var(--bg) var(--op),transparent);backdrop-filter:blur(14px);border-top:1px solid var(--ac);box-shadow:0 -4px 22px #00d4ff2e}
 nav.bar div{display:flex;width:100%;max-width:560px;gap:4px}
-nav.bar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:1px;padding:6px 0;border-radius:14px;font-size:11px;font-weight:600;color:var(--mu)}
-nav.bar button span{font-size:21px}
-nav.bar button.on{color:var(--tx);background:var(--s2)}
+nav.bar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 0;font-size:8px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mu)}
+nav.bar button span{font-size:20px}
+nav.bar button.on{color:var(--ac);background:linear-gradient(0deg,#00d4ff26,transparent);box-shadow:inset 0 2px 0 var(--ac)}
 nav.bar button.on span{filter:drop-shadow(0 0 6px var(--ac))}
-.ov{position:fixed;inset:0;z-index:40;background:#000a;backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
+.ov{position:fixed;inset:0;z-index:40;background:#000b;backdrop-filter:blur(4px);display:none;align-items:flex-end;justify-content:center}
 .ov.on{display:flex}
-.sheet{width:100%;max-width:520px;max-height:92vh;overflow:auto;background:var(--s1);border:1px solid var(--line);border-radius:26px 26px 0 0;padding:8px 20px calc(24px + env(safe-area-inset-bottom,0px));animation:up .25s}
-@media(min-width:600px){.ov{align-items:center}.sheet{border-radius:26px}}
+.sheet{width:100%;max-width:520px;max-height:92vh;overflow:auto;background:color-mix(in srgb,var(--s1) var(--op),transparent);backdrop-filter:blur(10px);border:1px solid var(--line);border-top:2px solid var(--ac);box-shadow:0 0 34px #00d4ff33;border-radius:0;padding:8px 20px calc(24px + env(safe-area-inset-bottom,0px));animation:up .25s}
+@media(min-width:600px){.ov{align-items:center}}
 @keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
-.grab{width:40px;height:4px;border-radius:9px;background:var(--line);margin:6px auto 14px}
-.sheet h3{margin:0 0 12px;font-size:19px}
-label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mu);margin:10px 0 4px}
-input,select,textarea{width:100%;background:var(--bg);color:var(--tx);border:1px solid var(--line);border-radius:12px;padding:11px 12px;font:inherit;font-size:16px}
+.grab{width:40px;height:3px;background:var(--ac);margin:6px auto 14px;box-shadow:0 0 8px var(--ac)}
+.sheet h3{margin:0 0 12px;font-size:16px;letter-spacing:.12em;text-transform:uppercase;color:var(--ac)}
+label{display:block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--mu);margin:10px 0 4px}
+input,select,textarea{width:100%;background:#00060fb3;color:var(--tx);border:1px solid var(--line);border-radius:2px;padding:11px 12px;font:inherit;font-size:16px}
+input[type=range]{padding:0;accent-color:var(--ac);background:none;border:0}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--ac);border-color:transparent}
 .two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .full{width:100%;margin-top:16px}
-.err{background:#f43f5e1f;color:var(--bad);border-radius:12px;padding:10px;font-size:13px;margin-top:10px;display:none}
-.lnk{color:var(--ac);font-weight:600;font-size:13px}
-details{background:var(--s2);border-radius:14px;padding:12px 14px;margin-bottom:8px}
-summary{font-weight:700;cursor:pointer}
-details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{padding-left:18px;margin:4px 0 0}
+.err{background:#ff4d6d1f;color:var(--bad);border:1px solid #ff4d6d66;padding:10px;font-size:14px;margin-top:10px;display:none}
+.lnk{color:var(--ac);font-weight:700;font-size:13px}
+details{padding:12px 14px;margin-bottom:8px}
+summary{font-weight:700;font-size:12px;letter-spacing:.06em;cursor:pointer;color:var(--ac)}
+details p,details li{color:var(--mu);font-size:15px;margin:6px 0 0}details ul{padding-left:18px;margin:4px 0 0}
 .list{display:flex;flex-direction:column;gap:10px}
-.log{background:var(--s2);border-radius:14px;padding:12px;display:flex;justify-content:space-between;gap:10px;font-size:13px}
-.log b{font-size:14px}.log small{color:var(--mu)}
-.dot{width:11px;height:11px;border-radius:50%;background:var(--ac2);display:inline-block;margin-right:8px}
-.upd{border-left:3px solid var(--ac);padding:2px 0 2px 12px;margin-bottom:14px}.upd b{font-size:15px}.upd small{color:var(--mu);display:block}.upd ul{margin:4px 0 0;padding-left:18px;color:var(--mu);font-size:14px}
-#toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;transition:.3s;z-index:60;background:var(--s2);border:1px solid var(--line);padding:11px 18px;border-radius:99px;font-size:14px;font-weight:600;pointer-events:none;max-width:90vw}
+.log{padding:12px;display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.log b{font-size:15px}.log small{color:var(--mu);font-size:13px}
+.dot{width:11px;height:11px;border-radius:50%;background:var(--ac2);display:inline-block;margin-right:8px;box-shadow:0 0 8px currentColor}
+.upd{border-left:3px solid var(--ac);padding:2px 0 2px 12px;margin-bottom:14px}.upd b{font-size:16px}.upd small{color:var(--mu);display:block}.upd ul{margin:4px 0 0;padding-left:18px;color:var(--mu);font-size:15px}
+#toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);opacity:0;transition:.3s;z-index:60;background:var(--s2);border:1px solid var(--ac);box-shadow:0 0 16px #00d4ff55;padding:11px 18px;font-size:11px;letter-spacing:.06em;font-weight:700;pointer-events:none;max-width:90vw}
 #toast.on{transform:translate(-50%,0);opacity:1}
+.st.amber{background:#ffb02026;color:var(--ac2)}
+.pk{display:flex;gap:8px;align-items:center;margin:0;padding:7px 2px;font-family:"Rajdhani",system-ui,sans-serif;font-size:16px;letter-spacing:.02em;text-transform:none;color:var(--tx)}
+.pk input{width:auto}
+a.btn{display:inline-block;text-decoration:none;text-align:center}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn.bad{background:linear-gradient(180deg,#ff4d6dee,#b8264a);color:#fff}
 .hid{display:none!important}
+.cd{font-family:var(--hd);color:var(--ac2);letter-spacing:.06em;font-variant-numeric:tabular-nums}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<canvas id="space"></canvas>
 
 <main>
 <section id="tab-home" class="tab on">
@@ -92,23 +108,26 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 
 <section id="tab-meetups" class="tab">
 <div class="ph"><h2>Meetups</h2></div>
+<div class="chips" id="chips-kind"></div>
 <div class="chips" id="chips-meetups"></div>
-<div id="meetups-list" class="grid"></div>
+<div id="meetups-wrap"><div class="tag" style="margin:4px 0 8px">📅 Scheduled meetups</div><div id="meetups-list" class="grid"></div></div>
+<div id="lfg-wrap" style="margin-top:18px"><div class="tag" style="margin:4px 0 8px">⚔️ Looking for game</div><div id="lfg-list" class="grid"></div></div>
 </section>
 
-<section id="tab-lfg" class="tab">
-<div class="ph"><h2>Looking For Game</h2></div>
-<div class="chips" id="chips-lfg"></div>
-<div id="lfg-list" class="grid"></div>
+<section id="tab-games" class="tab">
+<div id="games-index"><div class="ph"><h2>Games</h2></div><div id="games-list" class="grid"></div></div>
+<div id="game-page" class="hid"></div>
 </section>
 
 <section id="tab-stats" class="tab">
 <div class="ph"><h2>Battle Record</h2></div>
+<div class="card" style="margin-bottom:12px"><h3>Club Members</h3><div id="club-list" class="list"></div></div>
 <div id="user-profile-stats" class="card hid" style="margin-bottom:12px">
-<div class="stat"><div><small>Games Logged</small><b id="stat-total-games">0</b></div><div><small>Badges</small><b id="stat-total-badges" style="color:var(--ac2)">0 / 5</b></div><div><small>Status</small><b style="font-size:13px;color:var(--ok)">✔ Verified</b></div></div>
+<div class="stat"><div><small>Matches Recorded</small><b id="stat-total-games">0</b></div><div><small>Badges</small><b id="stat-total-badges" style="color:var(--ac2)">0 / 8</b></div><div><small>Days Logged In</small><b id="stat-total-days">0</b></div></div>
 <div class="bg5" id="badges-grid"></div>
 </div>
-<div class="card"><h3>Recent Community Games</h3><div id="game-logs-list" class="list"></div></div>
+<div id="card-played" class="card hid" style="margin-bottom:12px"><h3>Played Meetups</h3><p>A game is posted on every player's record once all registered players confirm it.</p><div id="played-list" class="list"></div></div>
+<div id="card-community" class="card hid"><h3>Recent Community Games</h3><div id="game-logs-list" class="list"></div></div>
 </section>
 
 <section id="tab-settings" class="tab">
@@ -118,8 +137,12 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <p id="set-username-note"></p><div id="set-username-err" class="err"></div>
 <button class="btn" onclick="saveUsername()">Save Username</button>
 <button class="btn g" onclick="handleLogout()">Sign Out</button></div>
+<div class="card" style="margin-bottom:12px"><h3>Club Records</h3><p>Show your account in the club members list so other signed-in members can see the games you have recorded.</p><label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="pub-on" style="width:auto" onchange="setPublic(this.checked)"> Make my account public</label><p id="pub-note"></p></div>
+<div class="card" style="margin-bottom:12px"><h3>Interface Opacity</h3><p>Make panels more see-through to show the stars behind them: <b id="op-val"></b></p><input type="range" id="op-range" min="35" max="100" step="5" oninput="setOpacity(this.value)" aria-label="Interface opacity"></div>
+<div class="card" style="margin-bottom:12px"><h3>Sound Effects</h3><p>Button clicks and confirmation tones.</p><label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="sound-on" style="width:auto" onchange="setSound(this.checked)"> Play sounds</label></div>
 <div class="card" style="margin-bottom:12px"><h3>Help</h3><p>Guides for every part of the app.</p><button class="btn g" onclick="openSheet('sh-help')">Open Help</button></div>
 <div class="card" style="margin-bottom:12px"><h3>What's New</h3><p>Version info and recent changes.</p><button class="btn g" onclick="openSheet('sh-updates')">Open What's New</button></div>
+<div class="card" style="margin-bottom:12px;border-color:#ff4d6d66"><h3>Delete Account</h3><p>Permanently delete your account. This cannot be undone.</p><button class="btn bad" onclick="openDelete()">Delete Account</button></div>
 <div id="admin-settings-panel" class="card hid" style="border-color:#f43f5e66">
 <h3>🛡 Administrator Diagnostics</h3>
 <div id="db-status-banner" class="row" style="align-items:center;justify-content:space-between">
@@ -135,7 +158,7 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <nav class="bar"><div>
 <button data-tab="home" onclick="switchTab('home')"><span>📰</span>News</button>
 <button data-tab="meetups" onclick="switchTab('meetups')"><span>📅</span>Meetups</button>
-<button data-tab="lfg" onclick="switchTab('lfg')"><span>⚔️</span>LFG</button>
+<button data-tab="games" onclick="switchTab('games');closeGame()"><span>♟️</span>Games</button>
 <button data-tab="stats" id="nav-stats" class="hid" onclick="switchTab('stats')"><span>🏆</span>Record</button>
 <button id="nav-signin" onclick="openAuthModal('login')"><span>🔑</span>Sign In</button>
 <button data-tab="settings" id="nav-settings" class="hid" onclick="switchTab('settings')"><span>⚙️</span>Settings</button>
@@ -150,6 +173,8 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <label>Password</label>
 <input type="password" id="auth-password" required placeholder="••••••••" autocomplete="current-password">
 <label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="remember-login" style="width:auto"> Remember my email</label>
+<label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="remember-pass" style="width:auto"> Remember my password</label>
+<p style="margin:2px 0 0;font-size:12px;color:var(--mu)">Saved by your browser's password manager, never by this app. Do not use on a shared device.</p>
 <div id="auth-error" class="err"></div>
 <button class="btn full" id="auth-submit-btn">Sign In</button>
 </form>
@@ -157,35 +182,39 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 </div></div>
 
 <div class="ov" id="sh-meetup" onclick="if(event.target===this)closeSheet('sh-meetup')"><div class="sheet"><div class="grab"></div>
-<h3>Host a Meetup</h3>
+<h3 id="meetup-h">Host a Meetup</h3>
 <form onsubmit="handleCreateMeetup(event)">
-<label>Event Title</label><input id="meetup-title" required placeholder="e.g., Saturday 40K Throwdown">
+<label>Event Title</label><input id="meetup-title" required placeholder="e.g., Saturday Skirmish Night">
 <label>Game System</label><select id="meetup-system"></select>
 <div class="two"><div><label>Date &amp; Time</label><input type="datetime-local" id="meetup-date" required></div><div><label>Venue</label><input id="meetup-location" required placeholder="Game store / library"></div></div>
 <div class="two"><div><label>Spots (2 or more)</label><input type="number" id="meetup-spots" min="2" value="4"></div><div><label>Needed to run</label><input type="number" id="meetup-min" min="1" value="2" required></div></div>
 <label style="display:flex;gap:8px;align-items:center;text-transform:none;letter-spacing:0;font-size:13px"><input type="checkbox" id="meetup-unlimited" style="width:auto" onchange="$('meetup-spots').disabled=this.checked"> No limit on spots</label>
 <label>Details</label><textarea id="meetup-desc" rows="3" required placeholder="Points level, terrain, what to bring..."></textarea>
-<button class="btn full">Publish Meetup</button>
+<button class="btn full" id="meetup-btn">Publish Meetup</button>
 </form></div></div>
 
 <div class="ov" id="sh-lfg" onclick="if(event.target===this)closeSheet('sh-lfg')"><div class="sheet"><div class="grab"></div>
-<h3>Post a Listing</h3>
+<h3 id="lfg-h">Post a Listing</h3>
 <form onsubmit="handleCreateLfg(event)">
 <label>Game System</label><select id="lfg-system"></select>
 <label>Game / Format</label><input id="lfg-game" required placeholder="e.g., 2000pts Matched Play">
 <div class="two"><div><label>Opponents Needed</label><input id="lfg-players" required placeholder="Need 1 opponent"></div><div><label>Area</label><input id="lfg-location" required placeholder="East Lancaster"></div></div>
 <label>Details &amp; Schedule</label><textarea id="lfg-desc" rows="3" required placeholder="Availability, experience level, painted or unpainted..."></textarea>
-<button class="btn full">Post Listing</button>
+<button class="btn full" id="lfg-btn">Post Listing</button>
 </form></div></div>
 
 <div class="ov" id="sh-log" onclick="if(event.target===this)closeSheet('sh-log')"><div class="sheet"><div class="grab"></div>
-<h3>Log a Game</h3>
+<h3 id="log-h">Log a Game</h3>
 <form onsubmit="handleLogGameSubmit(event)">
 <label>Game System</label><select id="log-system"></select>
 <label>Scenario / Mission</label><input id="log-game-title" required placeholder="e.g., Only War, Skirmish, Dogfight">
 <div class="two"><div><label>Result</label><input id="log-game-score" required placeholder="Victory / 12-8"></div><div><label>Players</label><input type="number" min="1" max="20" id="log-game-players" required value="2"></div></div>
+<label>Who did you play with?</label>
+<input id="lg-filter" placeholder="Search members" oninput="filterLog()" autocomplete="off">
+<div id="lg-list" style="max-height:150px;overflow:auto;margin-top:6px;border:1px solid var(--line);padding:4px 8px"></div>
+<label>Others (not on the app)</label><input id="lg-guests" maxlength="300" placeholder="Names separated by commas">
 <label>Notes (optional)</label><textarea id="log-game-notes" rows="2" placeholder="Epic last-turn charge!"></textarea>
-<button class="btn full">Save Game</button>
+<button class="btn full" id="log-btn">Save Game</button>
 </form></div></div>
 
 <div class="ov" id="sh-help" onclick="if(event.target===this)closeSheet('sh-help')"><div class="sheet"><div class="grab"></div>
@@ -201,29 +230,149 @@ details p,details li{color:var(--mu);font-size:14px;margin:6px 0 0}details ul{pa
 <button class="btn g full" onclick="closeSheet('sh-updates')">Close</button>
 </div></div>
 
+<div class="ov" id="sh-played" onclick="if(event.target===this)closeSheet('sh-played')"><div class="sheet"><div class="grab"></div>
+<h3>Report Meetup Result</h3>
+<p id="pl-meetup" style="color:var(--mu);margin:0"></p>
+<form onsubmit="handlePlayed(event)">
+<div id="pl-s1">
+<label>Did the meetup happen?</label>
+<select id="pl-happened" onchange="plStep(1)"><option value="yes">Yes, a game was played</option><option value="no">No, it did not happen (delete the meetup)</option></select>
+<div id="pl-play-f">
+<label>Game System</label><select id="pl-system"></select>
+<label>Game Played</label><input id="pl-game" maxlength="80" placeholder="e.g., 2000pts Matched Play">
+<div class="two"><div><label>Result (optional)</label><input id="pl-result" maxlength="60" placeholder="Victory / 12-8"></div><div><label>Date Played</label><input type="date" id="pl-date"></div></div>
+<label>Notes (optional)</label><textarea id="pl-notes" rows="2" maxlength="300"></textarea>
+</div>
+</div>
+<div id="pl-s2" class="hid">
+<div id="pl-sum" style="margin-top:10px"></div>
+<label>Who played? Confirm before submitting</label>
+<div id="pl-rev" class="list"></div>
+<label>Add a member</label>
+<div class="row" style="flex-wrap:nowrap"><select id="pl-add"></select><button type="button" class="jn" onclick="addPick()">Add</button></div>
+<label>Add someone not on the app</label>
+<div class="row" style="flex-wrap:nowrap"><input id="pl-gadd" maxlength="30" placeholder="Name" autocomplete="off" onkeydown="if(event.key==='Enter'){event.preventDefault();addGuest()}"><button type="button" class="jn" onclick="addGuest()">Add</button></div>
+<p style="color:var(--mu);font-size:14px;margin:10px 0 0">Every member listed is asked to confirm when they sign in. The game is posted on all their records once every member has confirmed. People not on the app need no confirmation.</p>
+</div>
+<button class="btn full" id="pl-btn">Review players</button>
+<button type="button" class="btn g full hid" id="pl-back" style="margin-top:10px" onclick="plStep(1)">&larr; Back</button>
+</form></div></div>
+
+<div class="ov" id="sh-confirm" onclick="if(event.target===this)dismissConfirm()"><div class="sheet"><div class="grab"></div>
+<h3>Did this game happen?</h3>
+<p id="cf-count" style="color:var(--mu);margin:0 0 8px"></p>
+<div id="cf-body"></div>
+<button class="btn full" onclick="answerConfirm('confirmed')">Yes, this is correct</button>
+<button class="btn g full" style="margin-top:10px" onclick="answerConfirm('hidden')">Correct, but do not record it for me</button>
+<button class="btn g full" style="margin-top:10px" onclick="answerConfirm('declined')">Not correct</button>
+<button class="btn g full" style="margin-top:10px" onclick="dismissConfirm()">Decide later</button>
+</div></div>
+
+<div class="ov" id="sh-delacct" onclick="if(event.target===this)closeSheet('sh-delacct')"><div class="sheet"><div class="grab"></div>
+<h3>Delete your account?</h3>
+<p style="color:var(--mu);margin:0 0 6px">This cannot be undone. Your sign-in, username, public profile, meetup seats, chat messages, game confirmations and badge progress are deleted.</p>
+<p style="color:var(--mu);margin:0">Meetups, listings and games you posted stay for the club but show as Deleted member.</p>
+<label>Type DELETE to confirm</label><input id="del-confirm" autocomplete="off" placeholder="DELETE">
+<div id="del-err" class="err"></div>
+<button class="btn bad full" onclick="deleteAccount()">Delete my account</button>
+<button class="btn g full" style="margin-top:10px" onclick="closeSheet('sh-delacct')">Cancel</button>
+</div></div>
+
+<div class="ov" id="sh-choose" onclick="if(event.target===this)closeSheet('sh-choose')"><div class="sheet"><div class="grab"></div>
+<h3>What would you like to post?</h3>
+<button class="btn full" onclick="closeSheet('sh-choose');resetForms();openSheet('sh-meetup')">Host a meetup</button>
+<button class="btn g full" style="margin-top:10px" onclick="closeSheet('sh-choose');resetForms();openSheet('sh-lfg')">Post a looking-for-game listing</button>
+<button class="btn g full" style="margin-top:10px" onclick="closeSheet('sh-choose')">Cancel</button>
+</div></div>
+
+<div class="ov" id="sh-public" onclick="if(event.target===this)dismissPublic()"><div class="sheet"><div class="grab"></div>
+<h3>Join the club records?</h3>
+<p style="color:var(--mu);margin:0 0 6px">Make your account public and your username will appear in the Club Members list on the Record tab. Signed-in members can see that list and the games you have recorded. Your email is never shown.</p>
+<p style="color:var(--mu);margin:0">You can change this any time in Settings.</p>
+<button class="btn full" onclick="setPublic(true)">Yes, make me public</button>
+<button class="btn g full" style="margin-top:10px" onclick="setPublic(false)">No, keep me private</button>
+<button class="btn g full" style="margin-top:10px" onclick="dismissPublic()">Ask me later</button>
+</div></div>
+
+<div class="ov" id="sh-member" onclick="if(event.target===this)closeSheet('sh-member')"><div class="sheet"><div class="grab"></div>
+<h3 id="mb-name"></h3>
+<label>Achievements <span id="mb-earned"></span></label>
+<div class="bg5" id="mb-badges"></div>
+<label>Recorded games</label>
+<p id="mb-count" style="color:var(--mu);margin:0 0 10px"></p>
+<div id="mb-games" class="list"></div>
+<button class="btn g full" onclick="closeSheet('sh-member')">Close</button>
+</div></div>
+
+<div class="ov" id="sh-pg" onclick="if(event.target===this)closeSheet('sh-pg')"><div class="sheet"><div class="grab"></div>
+<h3>Played Game</h3>
+<div id="pg-body"></div>
+<button class="btn g full" style="margin-top:10px" onclick="closeSheet('sh-pg')">Close</button>
+</div></div>
+
+<div class="ov" id="sh-mu" onclick="if(event.target===this)closeChat()"><div class="sheet"><div class="grab"></div>
+<h3 id="mu-title"></h3>
+<div id="mu-info"></div>
+<label id="mu-chat-label">Meetup chat</label>
+<p id="chat-note" style="color:var(--mu);font-size:13px;margin:0 0 6px"></p>
+<div id="chat-list" style="max-height:260px;overflow:auto;border:1px solid var(--line);padding:8px;display:flex;flex-direction:column;gap:8px"></div>
+<form id="chat-form" onsubmit="sendChat(event)" style="margin-top:10px"><div class="row" style="flex-wrap:nowrap"><input id="chat-input" maxlength="500" placeholder="Ask a question or say hi" autocomplete="off"><button class="btn">Send</button></div></form>
+<button id="chat-signin" class="btn full hid" onclick="closeChat();openAuthModal('login')">Sign in to chat</button>
+<button class="btn g full" style="margin-top:10px" onclick="closeChat()">Close</button>
+</div></div>
+
 <div id="toast"></div>
 
 <script>
-const VERSION='2.7.0',BUILT='2026-10-05 11:30 PM PT';
+const VERSION='2.23.0',BUILT='2026-10-05 10:22 PM PT';
 const SUPABASE_URL='https://cizwgastmjxupnyrwwoq.supabase.co';
 const SUPABASE_KEY='sb_publishable_udOIKINsu3-rZnyp9OiFnA_4qSNZxue';
 const ADMIN_EMAIL='maunderingcabal@gmail.com';
 const SYSTEMS=[
-{id:'wh',name:'Warhammer',icon:'💀'},
 {id:'opr',name:'One Page Rules',icon:'📄'},
 {id:'bt',name:'BattleTech',icon:'🤖'},
 {id:'kow',name:'Kings of War',icon:'👑'},
 {id:'xw',name:'X-Wing',icon:'🚀'},
+{id:'sc',name:'StarCraft',icon:'👾'},
 {id:'other',name:'Other',icon:'🎲'}
 ];
 const ACHIEVEMENTS=[
-{id:'first_game',name:'First Blood',desc:'Log your first game.',icon:'🩸',n:1},
-{id:'board_gamer',name:'Veteran',desc:'Log 3 games.',icon:'🎖️',n:3},
-{id:'social_butterfly',name:'Warlord',desc:'Host a meetup or post a listing.',icon:'📣',n:0,hosted:true},
-{id:'dice_master',name:'Dice Master',desc:'Log 5 games.',icon:'🎲',n:5},
-{id:'avtc_legend',name:'AVTC Legend',desc:'Log 10 games.',icon:'👑',n:10}
+{id:'d1',kind:'days',n:1,name:'Boarded',desc:'Log in for the first time.',icon:'🛰️'},
+{id:'d7',kind:'days',n:7,name:'Regular',desc:'Log in on 7 different days.',icon:'🚀'},
+{id:'d30',kind:'days',n:30,name:'Crew Member',desc:'Log in on 30 different days.',icon:'🛸'},
+{id:'d100',kind:'days',n:100,name:'Fleet Veteran',desc:'Log in on 100 different days.',icon:'🌌'},
+{id:'m1',kind:'matches',n:1,name:'Opening Salvo',desc:'Record your first match.',icon:'💥'},
+{id:'m5',kind:'matches',n:5,name:'Battle Tested',desc:'Record 5 matches.',icon:'🎖️'},
+{id:'m10',kind:'matches',n:10,name:'Campaign Hardened',desc:'Record 10 matches.',icon:'⚔️'},
+{id:'m25',kind:'matches',n:25,name:'Grand Strategist',desc:'Record 25 matches.',icon:'👑'}
+];
+const GAMES=[
+{id:'opr',blurb:'Free, fast rules for sci-fi and fantasy battles.',summary:['One Page Rules is a family of free tabletop wargames, including Grimdark Future (sci-fi) and Age of Fantasy, plus skirmish and regiment versions. Each rule set is short enough to learn in an evening and games play quickly.','Armies are built from points-based unit lists that work with almost any miniatures, so players can bring models they already own.'],rules:'https://www.onepagerules.com',builder:'https://army-forge.onepagerules.com'},
+{id:'bt',blurb:'Giant walking war machines and tactical combat.',summary:['BattleTech is a sci-fi tabletop game of giant piloted war machines called BattleMechs, set in a far-future war between rival Houses and Clans.','The classic game tracks armor, damage by location and weapon heat in detail. Alpha Strike is a faster, simpler version that works well for larger battles and newer players. Games are usually played on a hex map or a table.'],rules:'https://battletech.com/downloads/',builder:'https://masterunitlist.battletech.com/force'},
+{id:'kow',blurb:'Mass fantasy battles with regiments of troops.',summary:['Kings of War is a fantasy mass-battle game from Mantic Games. Players move large regiments of troops, monsters and war machines on movement trays and fight for control of the battlefield.','Armies are built to a points limit from many factions, and the core rules are designed to be quick to learn.'],rules:'https://companion.manticgames.com/kings-of-war-4th-edition-rules/',builder:'https://companion.manticgames.com/'},
+{id:'xw',blurb:'Starship dogfights in a galaxy far, far away.',summary:['X-Wing is a Star Wars miniatures game of starfighter combat. Each player builds a squadron of ships to a points limit, then secretly picks every ship\'s move each round before they are revealed.','Games are short and tactical, with a focus on positioning, pilot skill and upgrade choices.'],rules:'https://www.xwing.life/rules',builder:'https://yasb.app/?f=Rebel%20Alliance&d=v10ZsZ50Z&sn=Unnamed%20Squadron&obs='},
+{id:'sc',blurb:'Terran, Zerg and Protoss clash on the tabletop.',summary:['Tabletop games set in the StarCraft universe, where the human Terrans, the insectoid Zerg and the psionic Protoss fight for control of the sector.','The club admin should update this summary and the links below with the specific StarCraft rules the club plays.'],rules:'https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf',builder:'https://www.starcraft-builder.com/'}
 ];
 const UPDATES=[
+{v:'2.23.0',d:'2026-10-05',t:['The club now keeps at most 200 meetups: when a new meetup is posted and the club is full, the oldest meetups (by date) are deleted to make room','A deleted meetup takes its player list and chat with it','Played games from those meetups are kept on each player\'s record; View still shows the game details, but the meetup and its chat can no longer be opened','Help updated']},
+{v:'2.22.0',d:'2026-10-05',t:['If the host reports that a meetup did not happen, the meetup is now deleted (after a confirmation), together with its player list and chat','The meetup chat stays open on a finished meetup: tap View on the played game, in Played Meetups or on a member page, and the chat opens right there with the game details','Closing the chat from a member page takes you back to that page','Help updated']},
+{v:'2.21.0',d:'2026-10-05',t:['The Record tab is now only for signed-in members: it is hidden from the bottom bar when you are signed out, and the Club Members list and member pages need an account','Once every player has confirmed a played meetup, the meetup leaves the Meetups list and the News feed, and the game lives on in Played Meetups on the Record tab','New View button on every played meetup, in your own Played Meetups list and on member pages, opens the full details: game, result, date, notes, players and status','From that view you can open the meetup chat, as long as the meetup still exists','Help updated']},
+{v:'2.20.0',d:'2026-10-05',t:['Every scheduled meetup now shows a live countdown to its start in days, hours, minutes and seconds; after the start time it says Already started','The countdown also shows in the meetup pop-up, and the host\'s Report game result button appears as soon as the start time passes','Every looking-for-game listing now has an Open and chat button: it opens the listing with its details and a chat room for that listing','Same chat rules as meetups: anyone can read, signed-in members with a username can write and delete their own messages, admins can delete any, and new messages appear within a few seconds','Deleting a listing also deletes its chat','Help updated']},
+{v:'2.19.0',d:'2026-10-05',t:['When you are asked to confirm a played meetup there is a new answer: Correct, but do not record it for me','It counts as a confirmation, so the game can still be posted for the other players','The game is not saved on your record: it is left out of your Matches Recorded, your badges and your public member page','Your name shows as Private player in the player list for everyone else; you still see your own name with a note','You can give this answer from the pop-up or from the Played Meetups list on the Record tab','Help updated']},
+{v:'2.18.0',d:'2026-10-05',t:['Only the person who hosted a meetup (or an admin) can report its result, and only after its start time has passed','The report now starts with Did the meetup happen? If you choose No, the meetup is marked Did not happen and closed for joining and reporting','If a game was played, you fill in the game, result and date, then review the players before submitting: remove anyone who did not play, add members, or add names of people not on the app','Registered members you list are asked to confirm the next time they sign in','A game is now posted as played on every player\'s record only after all registered players confirm it; until then it is visible only to the players, the reporter and admins','Matches Recorded, badges, the News feed and member profiles count a game only once it is fully confirmed','If any player says Not correct the game shows as Disputed and is not posted; the reporter can delete it and report again','Deleting a Did not happen report reopens the meetup','Help updated']},
+{v:'2.17.1',d:'2026-10-05',t:['When you view a member in Club Members, only the badges they have earned are shown; locked badges are hidden','You still see your own locked badges and progress on the Record tab','Help updated']},
+{v:'2.17.0',d:'2026-10-05',t:['New Remember my password tick box on the sign-in sheet: your browser or password manager saves it, the app never stores it','New Delete Account button in Settings: you must type DELETE, and your sign-in, username, profile, meetup seats, chat messages and badge progress are removed','Meetups, listings and games you posted stay for the club and show as Deleted member','Help updated']},
+{v:'2.16.0',d:'2026-10-05',t:['The Games button now shows a game piece icon','Viewing a member from the Club Members list now shows the badges they have earned, as well as their recorded games','Every meetup card has a new Open and chat button: it opens the meetup with its details and a chat room for that meetup','Anyone can read a meetup chat; signed-in members with a username can write, ask questions and delete their own messages (admins can delete any)','New messages appear within a few seconds while a chat is open','Help updated']},
+{v:'2.15.1',d:'2026-10-05',t:['Rules and army builder links added for BattleTech, X-Wing, Kings of War and StarCraft','Every game page now has working Rules and Army builder buttons']},
+{v:'2.15.0',d:'2026-10-05',t:['StarCraft was added as a game system for meetups, listings and game logs','New Games button in the bottom bar: a box for each game opens a page with a summary, a Rules link, an Army builder link and a button to find meetups for that game','Links that have not been added yet show as coming soon','Help updated']},
+{v:'2.14.0',d:'2026-10-05',t:['The LFG tab is gone: looking-for-game listings now live on the Meetups tab, under the scheduled meetups','New All, Meetups and Looking for game buttons on the Meetups tab choose what you see; the game system buttons filter both','The + button on Meetups now asks whether you want to host a meetup or post a looking-for-game listing','Warhammer was removed from the game systems; older Warhammer posts now show as Other','Help updated']},
+{v:'2.13.1',d:'2026-10-05',t:['Games logged by private members no longer appear in the News feed','In games with other members (meetup player lists, played meetups, game logs) a private member\'s name now shows as Private member to everyone except themselves','Members who have not chosen yet are treated as private until they choose','Help updated']},
+{v:'2.13.0',d:'2026-10-05',t:['New account pop-up asks whether you want your account to be public on the club records; you can answer Yes, No or Ask me later','Change your choice any time in Settings > Club Records','The Record tab is now open to everyone and starts with a Club Members list of every public account','Tap View on a member to see the games they have recorded (games they logged and played meetups they reported); anyone can see this, even without an account','Your badges, played meetups and community games on the Record tab still need a sign-in','Members who signed up earlier are asked once the next time they sign in','Help updated']},
+{v:'2.12.0',d:'2026-10-05',t:['All old badges were removed','New badges for the number of different days you have logged in (1, 7, 30, 100) and the number of matches you have recorded (1, 5, 10, 25)','Days logged in and matches recorded are now counted on your account, so they follow you to other devices','Matches recorded counts games you log and played meetups you report','Help updated']},
+{v:'2.11.0',d:'2026-10-05',t:['When you log a game you can now pick the members you played with and type the names of anyone not on the app','You can edit your own logged games after saving (Edit button on the Record tab); admins can edit any game','The players count grows to match the people you add','Help updated']},
+{v:'2.10.0',d:'2026-10-05',t:['New Report game played button on meetups you host or joined: say what game was played, pick the members who played and type the names of anyone not on the app','Members you pick get a pop-up when they sign in asking them to confirm the game happened and the details are right','Players not on the app need no confirmation; the game is saved as played straight away','New Played Meetups list on the Record tab and in News, showing Confirmed, Disputed or how many have confirmed','The person who reported a game (or an admin) can delete it','Help updated']},
+{v:'2.9.0',d:'2026-10-05',t:['Button sound effects: clicks, tab changes, confirmations, errors and deletes; turn them off in Settings > Sound Effects','Members can now Edit and Delete their own meetups and LFG listings; admins can still edit and delete any post','Editing a meetup cannot lower the spots below the players who already joined','Posts now remember who made them so ownership is checked by the club database, not just the app','Help updated']},
+{v:'2.8.0',d:'2026-10-05',t:['New sci-fi cockpit look: glowing cyan HUD panels with corner brackets, angled buttons and a futuristic bottom bar','Animated scrolling starfield behind the whole app','Panels are slightly see-through; change how see-through in Settings > Interface Opacity (signed-in members)','The app is now always dark; the light theme was removed','Help updated']},
 {v:'2.7.0',d:'2026-10-05',t:['Meetups now have spots (2 or more, or no limit) and a number of players needed to run','Members can Join and Leave meetups; when seats are full no one else can join','Colour status: red needs players, green set but taking more players, blue seats full','Help updated']},
 {v:'2.6.2',d:'2026-10-05',t:['Posts always show a username, never an email: older posts that saved an email now show only the part before the @','You must choose a username before you can post']},
 {v:'2.6.1',d:'2026-10-05',t:['What\'s New is now a pop-up button in Settings, like Help','Version and build date and time moved into the What\'s New pop-up; the About card was removed']},
@@ -238,30 +387,39 @@ const UPDATES=[
 {v:'1.0.0',d:'2026-04-01',t:['Original release: meetups, LFG board, game logs, badges and Supabase login']}
 ];
 const HELP=[
-['Getting started','<p>Browse News, Meetups and LFG without an account. Use the bottom bar to move between sections. Tap Sign In in the bottom bar to create an account. After signing in the Record and Settings tabs appear and you can post and log games. Help is in Settings.</p>'],
+['Getting started','<p>Browse News and Meetups (which also lists looking-for-game posts) without an account. Use the bottom bar to move between sections; the Games tab has a page for each game. Tap Sign In in the bottom bar to create an account. The Record tab and the club members list need an account. After signing in the Record and Settings tabs appear, you see your own badges, played meetups and community games, and you can post and log games. Help is in Settings.</p>'],
 ['Username','<p>When you create an account you pick a username (3-20 letters, numbers or underscores). It is shown on your posts instead of your email, and you need one before you can post. You can change it in Settings once a month. Posts you made earlier keep the old name. Usernames must be unique, ignoring capital letters.</p>'],
-['News','<p>The News tab is the home screen. It shows the latest club activity in one feed: new meetups, looking-for-game listings and games that members have played, newest first. Each item shows the game system, who posted it and how long ago. Tap an item to open its section (Record items open after you sign in).</p>'],
-['Game systems','<p>Every meetup, listing and game log has a game system: Warhammer, One Page Rules, BattleTech, Kings of War, X-Wing or Other. Use the chips at the top of Meetups and LFG to filter by system.</p>'],
-['Meetups','<ul><li>Sign in, open Meetups and tap the + button.</li><li>Pick the system, date and time, venue and details such as points level or terrain.</li><li>Set the number of spots (2 or more, any number) or tick No limit, and how many players are needed for the game to run. You count as the first player.</li><li>Members tap Join to take a seat and Leave to give it up. When the seats are full nobody else can join.</li><li>Card colours: red means it needs players, green means it is set but taking more players, blue means seats are full.</li><li>Admins see a Delete button on each card.</li></ul>'],
-['Looking For Game (LFG)','<ul><li>Tap + on the LFG tab to post.</li><li>Say what format or points you want, how many opponents you need and your area.</li><li>Mention if painted armies are required and your availability.</li><li>Admins see a Delete button on each listing.</li></ul>'],
-['Battle Record and badges','<p>The Record tab appears after you sign in. Tap + there to log a game. Badges: First Blood (1 game), Veteran (3), Dice Master (5), AVTC Legend (10) and Warlord (host a meetup or post a listing).</p><p>Game counts are stored in this browser for now, so they do not follow you to another device.</p>'],
-['Settings and updates','<p>The Settings tab appears once you sign in. It holds your account and username, Help, and What\'s New. What\'s New opens a pop-up with the app version, build date and time, and the list of updates.</p>'],
+['News','<p>The News tab is the home screen. It shows the latest club activity in one feed: new meetups, looking-for-game listings and games that members have played, newest first. Each item shows the game system, who posted it and how long ago. Tap an item to open its section.</p>'],
+['Game systems','<p>Every meetup, listing and game log has a game system: One Page Rules, BattleTech, Kings of War, X-Wing, StarCraft or Other. Older posts that used Warhammer now show as Other. Use the system buttons at the top of Meetups to filter both meetups and looking-for-game posts.</p>'],
+['Games','<ul><li>The Games tab has a box for each game: One Page Rules, BattleTech, Kings of War, X-Wing and StarCraft.</li><li>Tap a box to open that game\'s page with a short summary, a Rules link, an Army builder link and a Find meetups button that shows meetups and looking-for-game posts for that game.</li><li>Links open in a new tab. A link that has not been added yet shows as coming soon.</li><li>Use All games at the top of a game page to go back.</li></ul>'],
+['Meetups','<ul><li>The Meetups tab shows scheduled meetups and looking-for-game listings together. Use the All, Meetups and Looking for game buttons at the top to choose which you see.</li><li>Sign in, open Meetups, tap the + button and choose Host a meetup.</li><li>Pick the system, date and time, venue and details such as points level or terrain.</li><li>Set the number of spots (2 or more, any number) or tick No limit, and how many players are needed for the game to run. You count as the first player.</li><li>Members tap Join to take a seat and Leave to give it up. When the seats are full nobody else can join.</li><li>Card colours: red means it needs players, green means it is set but taking more players, blue means seats are full.</li><li>Hosts see Edit and Delete buttons on their own meetups. Edit lets you change the system, title, time, venue, spots, players needed and details. You cannot set spots lower than the number of players who already joined. Admins can edit and delete any meetup.</li><li>Once every player has confirmed a game from a meetup, the meetup leaves this list. It stays on the Record tab under Played Meetups and on the member pages of the players; tap View there to see the details and the meetup chat.</li><li>The club keeps at most 200 meetups. When a new one is posted and the club is full, the oldest meetups by date are deleted, with their player lists and chats. Played games from them stay in Played Meetups and on the players\' records, and View still shows the details, but the meetup and its chat cannot be opened any more.</li><li>Each scheduled meetup shows a live countdown to its start in days, hours, minutes and seconds. After the start time it says Already started.</li><li>When a meetup is over, the host sees a Report game result button. See Reporting a meetup result.</li></ul>'],
+['Meetup and listing chat','<ul><li>Every meetup card and every looking-for-game listing has an Open and chat button. It opens the post with its details and a chat room for that post.</li><li>Anyone can read the chat. Sign in and choose a username to write. Use it to ask questions, such as what to bring, whether a spot is still open or when you can play.</li><li>Messages can be up to 500 characters. New messages appear within a few seconds while the chat is open.</li><li>You can delete your own messages. Admins can delete any message.</li><li>Members with a private account show as Private member in the chat.</li><li>On a finished meetup the chat stays open: tap View on the played game in Played Meetups or on a member page.</li><li>Deleting a meetup or listing also deletes its chat. This includes the oldest meetups being cleared when the club reaches 200 meetups.</li></ul>'],
+['Remembering your password','<ul><li>On the sign-in sheet, tick Remember my email to have your email filled in next time, or Remember my password to ask your browser to save it.</li><li>The app never stores your password itself. Your browser or password manager keeps it, so this works best in Chrome and Edge. Other browsers may offer to save it in their own way, or not at all.</li><li>You usually stay signed in on a device until you sign out, so you may not need your password often.</li><li>Do not tick it on a shared or public device.</li></ul>'],
+['Deleting your account','<ul><li>Go to Settings > Delete Account and type DELETE to confirm. It cannot be undone.</li><li>Deleted: your sign-in, username, public profile, meetup seats, chat messages, game confirmations and badge progress.</li><li>Kept: meetups, listings and games you posted stay for the club but show as Deleted member, and only admins can edit or remove them.</li><li>You can make a new account later, but your badges and old posts will not come back.</li></ul>'],
+['Looking for game listings','<ul><li>Open Meetups, tap + and choose Post a looking-for-game listing.</li><li>Say what format or points you want, how many opponents you need and your area.</li><li>Mention if painted armies are required and your availability.</li><li>Each listing has an Open and chat button so people can reply, ask questions and arrange a time. See Meetup and listing chat.</li><li>You see Edit and Delete buttons on your own listings. Use Edit to fix the format, opponents needed, area or details. Admins can edit and delete any listing.</li></ul>'],
+['Battle Record and badges','<p>The Record tab is for signed-in members. It starts with the Club Members list, then shows your badges, played meetups and the games the community has played. Tap + there to log a game: pick the members you played with and type the names of anyone not on the app. Tap Edit on your own games to fix them later.</p><p>Badges are earned two ways. Days logged in: Boarded (1 day), Regular (7), Crew Member (30) and Fleet Veteran (100). Matches recorded: Opening Salvo (1), Battle Tested (5), Campaign Hardened (10) and Grand Strategist (25). Each day you sign in counts once, however many times you open the app. Matches recorded counts games you log and played meetups you took part in once every registered player has confirmed them. Locked badges show your progress, such as 3 / 7. Your counts belong to your account, so they follow you to other devices.</p>'],
+['Club members and privacy','<ul><li>When you create an account a pop-up asks whether you want your account to be public on the club records. You can answer Yes, No or Ask me later.</li><li>Choose Yes and your username appears in the Club Members list at the top of the Record tab. Signed-in members can see that list. Tap View next to a member to see the games they have recorded: games they logged and played meetups that all players confirmed, and the badges they have earned (badges they have not earned yet are not shown).</li><li>Tap View on any played meetup, in a member list or in your own Played Meetups list, to see its full details, who played and, if the meetup still exists, its chat.</li><li>Choose No and you are not listed and have no member page. Games you log stay out of the News feed, and in games with other members (meetup player lists, played meetups and game logs) your name shows as Private member to everyone except you. Until you choose, you are treated as private.</li><li>Separately from your account setting, you can keep a single played meetup off your record by answering Correct, but do not record it for me when asked to confirm it. Your name then shows as Private player in that game.</li><li>Change your mind any time in Settings > Club Records. It takes effect straight away.</li><li>Your email is never shown. Looking-for-game listings still show your username, whether your account is public or private.</li><li>If you signed up before this feature existed you are asked once the next time you sign in.</li></ul>'],
+['Settings and updates','<p>The Settings tab appears once you sign in. It holds your account and username, Club Records (public or private), Interface Opacity, Sound Effects, Help, What\'s New and Delete Account. What\'s New opens a pop-up with the app version, build date and time, and the list of updates.</p>'],
+['Look and opacity','<p>The app uses a sci-fi cockpit look with a slowly scrolling starfield behind it. Once you sign in, open Settings and use the Interface Opacity slider (35% to 100%) to choose how see-through the panels are. Lower values show more stars; higher values are easier to read. Your choice is saved on this device. Animation is turned off if your device is set to reduce motion.</p>'],
+['Reporting a meetup result','<ul><li>Only the host of a meetup (or an admin) can report it, and the Report game result button appears once the meetup start time has passed.</li><li>First choose whether the meetup happened. If you choose No and confirm, the meetup is deleted, together with its player list and chat. This cannot be undone.</li><li>If a game was played, enter the game, the system, the date and the result if you like, then tap Review players.</li><li>On the review screen you confirm who played. Players who joined the meetup are already listed, and you are listed too. Tap Remove to take anyone off, pick a member to add, or type a name for anyone not on the app and tap Add. At least two players are needed.</li><li>Tap Submit report. Each member listed gets a pop-up the next time they sign in asking them to confirm the game happened and the details are correct. They can answer Yes, Correct but do not record it for me, Not correct or Decide later. If they decide later, they can still answer from the Played Meetups list on the Record tab.</li><li>The game is posted on every player\'s record only after all the registered players have confirmed it. Until then it shows how many have confirmed, such as 1 of 3, and only the players, the reporter and admins can see it. People not on the app need no confirmation.</li><li>If any player answers Not correct the game shows as Disputed and is never posted. The reporter or an admin can delete it and report it again.</li><li>Correct, but do not record it for me counts as a confirmation, so the game can still be posted for everyone else, but it is left off your own record: it does not count toward your Matches Recorded or badges and is not on your member page. Everyone else sees your name as Private player in that game\'s player list. You still see your own name, with a note. You cannot change this answer afterwards.</li><li>Once posted, the game counts toward each player\'s Matches Recorded and badges, appears in News and shows on public member pages.</li><li>When a game is posted its meetup leaves the Meetups list, so it cannot be reported again. If a night had more than one game, put them all in one report. Open the posted game any time with View in Played Meetups or on the member pages of the players. The meetup chat opens with it.</li></ul>'],
+['Sound effects','<p>Buttons play short synthesized tones: a click for buttons, a rising blip for tabs, a chime for success, a low buzz for warnings and a falling tone for deletes. Open Settings > Sound Effects to turn them on or off. The choice is saved on this device. Your browser only allows sound after you tap something, so the first tap may be silent on some phones.</p>'],
+['Editing and deleting your posts','<p>Posts made after version 2.9.0 belong to your account. Only you (and admins) see Edit and Delete on them. Older posts have no owner recorded until the club admin runs the ownership step in the database, so they stay admin-only until then. If a post was saved on your device only, edits also stay on your device.</p>'],
 ['Offline mode','<p>When you are online and signed in with an account, meetups, listings and game logs are saved to the club database and everyone sees them. If the database cannot be reached, or a save fails, the app keeps the post on your device only and tells you.</p>'],
-['Admins','<p>Admins see database status in Settings and can delete meetups and LFG listings using the Delete button on each card. If the database table does not exist yet, the post is removed on this device only.</p>']
+['Admins','<p>Admins see database status in Settings and can edit and delete any meetup or LFG listing using the buttons on each card. If the database table does not exist yet, the post is removed on this device only.</p>']
 ];
 let sb=null,online=false,user=null,authMode='login';
-const filt={meetups:'all',lfg:'all'};
+const filt={meetups:'all',kind:'all'};
 const soon=n=>{const d=new Date(Date.now()+n*864e5);d.setHours(18,0,0,0);d.setMinutes(d.getMinutes()-d.getTimezoneOffset());return d.toISOString().slice(0,16)};
 const hrs=h=>new Date(Date.now()-h*36e5).toISOString();
 let meetups=[
-{id:'1',system:'wh',title:'Saturday 40K & Age of Sigmar Night',date:soon(4),location:'Lancaster Game Store',description:'Open play, 1000-2000pts. Terrain provided.',author:'AVTC Admin'},
+{id:'1',system:'other',title:'Saturday Open Gaming Night',date:soon(4),location:'Lancaster Game Store',description:'Open play, 1000-2000pts. Terrain provided.',author:'AVTC Admin'},
 {id:'2',system:'xw',title:'X-Wing Squadron Skirmish',date:soon(7),location:'Quartz Hill Game Lounge',description:'Bring 200pt lists. Loaner ships available.',author:'Local Organizer'},
 {id:'3',system:'bt',title:'BattleTech Lance Clash',date:soon(10),location:'AV Community Center',description:'Alpha Strike, mixed tech, beginners welcome.',author:'AVTC Admin'}];
 let lfg=[
 {id:'1',system:'kow',game:'Kings of War 2300pts',players:'Need 1 opponent',location:'West Lancaster',description:'Weeknight evenings, painted armies preferred.',author:'Commander Dave'},
 {id:'2',system:'opr',game:'Grimdark Future Skirmish',players:'Need 2 players',location:'Palmdale / Lancaster',description:'Learning the rules, casual and friendly.',author:'Sarah K.'}];
 let logs=[
-{id:'1',system:'wh',game:'Only War',score:'Victory 82-61',players:2,notes:'Last turn charge saved the game.',author:'Marcus V.',date:'Yesterday'},
+{id:'1',system:'other',game:'Only War',score:'Victory 82-61',players:2,notes:'Last turn charge saved the game.',author:'Marcus V.',date:'Yesterday'},
 {id:'2',system:'xw',game:'Dogfight',score:'Win (1 ship left)',players:2,notes:'',author:'Jessica M.',date:'2 days ago'}];
 meetups.forEach((m,i)=>{m.created_at=hrs(3+i*20)});
 const sp=a=>a.map(n=>({id:'seed_'+n,name:n}));
@@ -270,7 +428,8 @@ Object.assign(meetups[1],{spots:4,min_players:2,players:sp(['Marcus','Jessica','
 Object.assign(meetups[2],{spots:2,min_players:2,players:sp(['Marcus','Sarah'])});
 lfg.forEach((l,i)=>{l.created_at=hrs(8+i*30)});
 logs.forEach((g,i)=>{g.created_at=hrs(5+i*26)});
-const sys=id=>SYSTEMS.find(s=>s.id===id)||SYSTEMS[5];
+const sys=id=>SYSTEMS.find(s=>s.id===id)||SYSTEMS[SYSTEMS.length-1];
+const sid=id=>SYSTEMS.some(s=>s.id===id)?id:'other';
 const esc=s=>String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
 const $=id=>document.getElementById(id);
 const store=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
@@ -282,10 +441,16 @@ window.addEventListener('DOMContentLoaded',async()=>{
  $('help-body').innerHTML=HELP.map((h,i)=>`<details ${i?'':'open'}><summary>${h[0]}</summary>${h[1]}</details>`).join('');
  $('updates-list').innerHTML=UPDATES.map(u=>`<div class="upd"><b>Version ${u.v}</b><small>${u.d}</small><ul>${u.t.map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>`).join('');
  $('about-info').textContent=`AVTC App version ${VERSION} • Built ${BUILT}`;
+ renderGames();
+ setOpacity(read('avtc_ui_opacity')||78);
+ $('sound-on').checked=read('avtc_sound')!=='off';
+ startSpace();
  initSupabase();
  switchTab('home');
  await checkUserSession();
  loadAllData();
+ loadClub();
+ setTimeout(checkPrompts,900);
  const r=read('avtc_remembered_email');
  if(r){$('auth-email').value=r;$('remember-login').checked=true}
 });
@@ -326,14 +491,14 @@ function switchTab(id){
  document.querySelectorAll('nav.bar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===id));
  const fab=$('fab');
  fab.dataset.tab=id;
- fab.classList.toggle('on',!!user&&['meetups','lfg','stats'].includes(id));
+ fab.classList.toggle('on',!!user&&['meetups','stats'].includes(id));
  window.scrollTo({top:0,behavior:'smooth'});
 }
 function fabAction(){
  const t=$('fab').dataset.tab;
- if(t==='meetups')openSheet('sh-meetup');
- else if(t==='lfg')openSheet('sh-lfg');
- else openSheet('sh-log');
+ resetForms();
+ if(t==='meetups')openSheet('sh-choose');
+ else{fillLogPicker([]);openSheet('sh-log')}
 }
 function openSheet(id){$(id).classList.add('on')}
 function closeSheet(id){$(id).classList.remove('on')}
@@ -352,18 +517,20 @@ function updateAuthUI(){
  if(user){
   $('nav-settings').classList.remove('hid');
   $('nav-signin').classList.add('hid');
-  $('nav-stats').classList.remove('hid');
   $('user-profile-stats').classList.remove('hid');
   renderAccount();
   renderUserStats();
+  recordLogin();
  }else{
   $('nav-settings').classList.add('hid');
   $('nav-signin').classList.remove('hid');
-  $('nav-stats').classList.add('hid');
   $('user-profile-stats').classList.add('hid');
   if($('tab-settings').classList.contains('on'))switchTab('home');
  }
+ $('nav-stats').classList.toggle('hid',!user);
  $('admin-settings-panel').classList.toggle('hid',!isAdmin(user));
+ $('card-played').classList.toggle('hid',!user);
+ $('card-community').classList.toggle('hid',!user);
  const cur=document.querySelector('.tab.on');
  if(cur)switchTab(cur.id.replace('tab-',''));
  renderMeetups();renderLfg();
@@ -373,6 +540,9 @@ function openAuthModal(mode){
  $('auth-error').style.display='none';
  const login=mode==='login';
  $('auth-user-wrap').classList.toggle('hid',login);
+ $('auth-email').autocomplete=login?'username':'email';
+ $('auth-password').autocomplete=login?'current-password':'new-password';
+ if(login&&read('avtc_remember_pass')==='1'){$('remember-pass').checked=true;fillCred()}
  $('auth-username').required=!login;
  $('auth-title').textContent=login?'Sign In to AVTC':'Create AVTC Account';
  $('auth-submit-btn').textContent=login?'Sign In':'Register';
@@ -395,7 +565,7 @@ async function handleAuthSubmit(e){
    if(t){showErr('That username is taken.');return}
   }
  }
- if($('remember-login').checked)store('avtc_remembered_email',email);
+ if($('remember-login').checked||$('remember-pass').checked)store('avtc_remembered_email',email);
  else try{localStorage.removeItem('avtc_remembered_email')}catch(x){}
  if(online&&sb){
   try{
@@ -412,8 +582,9 @@ async function handleAuthSubmit(e){
   store('avtc_local_user',JSON.stringify(user));
   toast('Signed in (offline mode)');
  }
+ await saveCred(email,password);
  await loadProfile();
- closeAuthModal();updateAuthUI();await syncFromServer();loadAllData();
+ closeAuthModal();updateAuthUI();await syncFromServer();loadAllData();loadClub();setTimeout(checkPrompts,600);
  if(!user.username){switchTab('settings');toast('Please choose a username')}
 }
 async function handleForgotEmail(){
@@ -430,7 +601,7 @@ async function handleForgotEmail(){
 async function handleLogout(){
  if(online&&sb)await sb.auth.signOut();
  try{localStorage.removeItem('avtc_local_user')}catch(e){}
- user=null;updateAuthUI();switchTab('home');toast('Signed out');
+ user=null;loginDays=0;didLogin='';updateAuthUI();switchTab('home');toast('Signed out');
 }
 
 async function saveRemote(table,row){
@@ -449,12 +620,20 @@ async function syncFromServer(){
  const okM=await pull('meetups','avtc_meetups','date',true,v=>{meetups=v});
  await pull('lfg_listings','avtc_lfg','created_at',false,v=>{lfg=v});
  await pull('game_logs','avtc_logs','created_at',false,v=>{logs=v});
+ const okP=await pull('played_meetups','avtc_played','created_at',false,v=>{played=v});
+ if(okP){
+  const{data:pp,error:pe2}=await sb.from('played_players').select('*');
+  played.forEach(g=>{g.players=pe2?[]:(pp||[]).filter(x=>x.played_id===g.id).map(x=>({id:x.user_id,name:x.username,status:x.status,hidden:x.hidden===true}))});
+  store('avtc_played',JSON.stringify(played));
+ }
  if(okM){
   const{data:pl,error:pe}=await sb.from('meetup_players').select('*');
   meetups.forEach(m=>{m.players=pe?[]:(pl||[]).filter(x=>x.meetup_id===m.id).map(x=>({id:x.user_id,name:x.username}))});
   store('avtc_meetups',JSON.stringify(meetups));
  }
+ await loadClub();
  loadAllData();
+ setTimeout(checkPrompts,500);
 }
 function logDate(d){return /^\d{4}-/.test(d||'')?new Date(d).toLocaleDateString('en-US',{dateStyle:'medium'}):(d||'')}
 
@@ -468,9 +647,10 @@ function timeAgo(t){
 function renderNews(){
  const ts=x=>Date.parse(x.created_at)||(+x.id>1e12?+x.id:0);
  const items=[].concat(
-  meetups.map(m=>({ts:ts(m),tab:'meetups',head:'📅 New meetup',title:m.title,sub:fmtDate(m.date)+' • '+m.location,system:m.system,by:m.author})),
-  lfg.map(l=>({ts:ts(l),tab:'lfg',head:'⚔️ Looking for game',title:l.game,sub:l.players+' • '+l.location,system:l.system,by:l.author})),
-  logs.map(g=>({ts:ts(g),tab:'stats',head:'🏆 Game played',title:g.game,sub:'Result: '+g.score+' • '+g.players+' players',system:g.system,by:g.author}))
+  meetups.filter(m=>!doneM(m)).map(m=>({ts:ts(m),tab:'meetups',head:'📅 New meetup',title:m.title,sub:fmtDate(m.date)+' • '+m.location,system:m.system,by:pname(m.author_id,m.author)})),
+  lfg.map(l=>({ts:ts(l),tab:'meetups',head:'⚔️ Looking for game',title:l.game,sub:l.players+' • '+l.location,system:l.system,by:l.author})),
+  logs.filter(g=>!isPrivate(g.author_id,g.author)).map(g=>({ts:ts(g),tab:'stats',head:'🏆 Game played',title:g.game,sub:'Result: '+g.score+' • '+g.players+' players',system:g.system,by:g.author})),
+  played.filter(g=>posted(g)&&!isPrivate(g.created_by,g.created_by_name)).map(g=>({ts:ts(g),tab:'stats',head:'✅ Meetup played',title:g.game,sub:(g.title||'Meetup')+' • '+((g.players||[]).length+(g.guests||[]).length)+' players',system:g.system,by:g.created_by_name}))
  ).sort((a,b)=>b.ts-a.ts).slice(0,20);
  $('news-list').innerHTML=items.length?items.map(i=>{
   const y=sys(i.system);
@@ -498,14 +678,18 @@ function nextChange(){
 function fmtDay(t){return new Date(t).toLocaleDateString('en-US',{dateStyle:'medium'})}
 async function loadProfile(){
  if(!user||isLocal()||!online||!sb)return;
- const{data}=await sb.from('profiles').select('username,username_changed_at').eq('id',user.id).maybeSingle();
- if(data){user.username=data.username;user.username_changed_at=data.username_changed_at;user.hasProfile=true}
+ let r=await sb.from('profiles').select('username,username_changed_at,is_public').eq('id',user.id).maybeSingle();
+ pubCol=!r.error;
+ if(r.error)r=await sb.from('profiles').select('username,username_changed_at').eq('id',user.id).maybeSingle();
+ const data=r.data;
+ if(data){user.username=data.username;user.username_changed_at=data.username_changed_at;user.is_public=data.is_public;user.hasProfile=true}
  else user.hasProfile=false;
 }
 function renderAccount(){
  if(!user)return;
  $('set-user').textContent='Signed in as '+(user.email||'Member');
  $('set-username').value=user.username||'';
+ renderPublicSetting();
  const nx=nextChange();
  $('set-username-note').textContent=!user.username?'Choose a username. It is shown on your posts.':(nx?'You can change your username again on '+fmtDay(nx)+'.':'You can change your username once a month. Past posts keep the old name.');
 }
@@ -530,14 +714,51 @@ async function saveUsername(){
   if(had)user.username_changed_at=new Date().toISOString();
   store('avtc_local_user',JSON.stringify(user));
  }
- renderAccount();toast('Username saved');
+ renderAccount();toast('Username saved');setTimeout(checkPrompts,300);
 }
 
-function loadAllData(){renderMeetups();renderLfg();renderGameLogs()}
+function renderGames(){
+ $('games-list').innerHTML=GAMES.map(g=>{
+  const s=sys(g.id);
+  return `<button class="card" style="text-align:left" onclick="openGame('${g.id}')"><span style="font-size:34px">${s.icon}</span><h3>${esc(s.name)}</h3><p>${esc(g.blurb)}</p></button>`}).join('');
+}
+function openGame(id){
+ const g=GAMES.find(x=>x.id===id);
+ if(!g)return;
+ const s=sys(id);
+ const link=(u,label)=>u?`<a class="btn" href="${esc(u)}" target="_blank" rel="noopener noreferrer">${label}</a>`:`<button class="btn g" disabled>${label}: coming soon</button>`;
+ $('game-page').innerHTML=`<div class="row" style="margin-bottom:12px"><button class="btn g" onclick="closeGame()">← All games</button></div><div class="hero" style="padding:18px"><span class="tag">${s.icon} Game</span><h2 style="font-size:22px;margin:4px 0 0">${esc(s.name)}</h2></div><div class="card" style="margin-top:12px"><h3>Summary</h3>${g.summary.map(x=>`<p>${esc(x)}</p>`).join('')}</div><div class="card" style="margin-top:12px"><h3>Links</h3><div class="row">${link(g.rules,'📖 Rules')}${link(g.builder,'🛠 Army builder')}</div></div><div class="row" style="margin-top:12px"><button class="btn" onclick="meetupsFor('${g.id}')">Find ${esc(s.name)} meetups</button></div>`;
+ $('games-index').classList.add('hid');$('game-page').classList.remove('hid');
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function closeGame(){$('game-page').classList.add('hid');$('games-index').classList.remove('hid')}
+function meetupsFor(id){filt.meetups=id;filt.kind='all';renderMeetups();renderLfg();switchTab('meetups')}
+function loadAllData(){renderMeetups();renderLfg();renderGameLogs();renderPlayed();renderUserStats();renderClub()}
+function kindChips(){
+ const k=[{id:'all',name:'All'},{id:'meetups',name:'📅 Meetups'},{id:'lfg',name:'⚔️ Looking for game'}];
+ $('chips-kind').innerHTML=k.map(x=>`<button class="chip ${filt.kind===x.id?'on':''}" onclick="filt.kind='${x.id}';renderMeetups();renderLfg()">${x.name}</button>`).join('');
+}
 function chips(tab){
  const el=$('chips-'+tab);
- el.innerHTML=[{id:'all',name:'All',icon:'✨'}].concat(SYSTEMS).map(s=>`<button class="chip ${filt[tab]===s.id?'on':''}" onclick="filt.${tab}='${s.id}';render${tab==='lfg'?'Lfg':'Meetups'}()">${s.icon} ${s.name}</button>`).join('');
+ el.innerHTML=[{id:'all',name:'All',icon:'✨'}].concat(SYSTEMS).map(s=>`<button class="chip ${filt.meetups===s.id?'on':''}" onclick="filt.meetups='${s.id}';renderMeetups();renderLfg()">${s.icon} ${s.name}</button>`).join('');
 }
+function cdText(d){
+ const t=Date.parse(d);
+ if(isNaN(t))return 'Time to be decided';
+ let n=Math.floor((t-Date.now())/1000);
+ if(n<=0)return 'Already started';
+ const dd=Math.floor(n/86400);n%=86400;
+ const h=Math.floor(n/3600);n%=3600;
+ const m=Math.floor(n/60);n%=60;
+ const p=x=>String(x).padStart(2,'0');
+ return dd+'d '+p(h)+'h '+p(m)+'m '+p(n)+'s';
+}
+function tickCd(){
+ let flip=false;
+ document.querySelectorAll('.cd').forEach(e=>{const t=cdText(e.dataset.d);if(t==='Already started'&&e.textContent!==t)flip=true;e.textContent=t});
+ if(flip)renderMeetups();
+}
+setInterval(tickCd,1000);
 function fmtDate(d){return d?new Date(d).toLocaleString('en-US',{dateStyle:'medium',timeStyle:'short'}):'TBD'}
 
 async function handleCreateMeetup(e){
@@ -546,75 +767,195 @@ async function handleCreateMeetup(e){
  const unl=$('meetup-unlimited').checked,spots=unl?null:parseInt($('meetup-spots').value),min=parseInt($('meetup-min').value);
  if(!unl&&!(spots>=2)){toast('Spots must be 2 or more');return}
  if(!(min>=1)||(!unl&&min>spots)){toast('Players needed must be between 1 and the number of spots');return}
- const m={id:Date.now().toString(),created_at:new Date().toISOString(),system:$('meetup-system').value,spots,min_players:min,players:[{id:user.id,name:displayName()}],title:$('meetup-title').value,date:$('meetup-date').value,location:$('meetup-location').value,description:$('meetup-desc').value,author:displayName()};
- const dbErr=await saveRemote('meetups',(({players,...row})=>row)(m));
+ if(editId){
+  const o=meetups.find(x=>x.id===editId);
+  if(!o||!canEdit(o)){toast('You can only edit your own posts');return}
+  if(spots&&spots<(o.players||[]).length){toast('Spots cannot be lower than the players already joined');return}
+  const f={system:$('meetup-system').value,spots,min_players:min,title:$('meetup-title').value,date:$('meetup-date').value,location:$('meetup-location').value,description:$('meetup-desc').value};
+  const er=await saveEdit('meetups',editId,f);
+  if(er&&er!=='#local'){toast('Could not save: '+er);return}
+  Object.assign(o,f);store('avtc_meetups',JSON.stringify(meetups));
+  closeSheet('sh-meetup');resetForms();renderMeetups();toast(er?'Updated on this device only':'Meetup updated');return;
+ }
+ const m={id:Date.now().toString(),created_at:new Date().toISOString(),author_id:user.id,system:$('meetup-system').value,spots,min_players:min,players:[{id:user.id,name:displayName()}],title:$('meetup-title').value,date:$('meetup-date').value,location:$('meetup-location').value,description:$('meetup-desc').value,author:displayName()};
+ const dbErr=await saveRemote('meetups',(({players,author_id,...row})=>row)(m));
  if(!dbErr&&online&&sb&&!isLocal())await sb.from('meetup_players').insert([{meetup_id:m.id,user_id:user.id,username:displayName()}]);
- meetups.unshift(m);store('avtc_meetups',JSON.stringify(meetups));
- closeSheet('sh-meetup');e.target.reset();$('meetup-spots').disabled=false;renderMeetups();markHosted();toast(dbErr?'Saved on this device only: '+dbErr:'Meetup posted!');
+ meetups.unshift(m);capMeetups(m.id);store('avtc_meetups',JSON.stringify(meetups));
+ closeSheet('sh-meetup');e.target.reset();$('meetup-spots').disabled=false;renderMeetups();toast(dbErr?'Saved on this device only: '+dbErr:'Meetup posted!');
 }
 function renderMeetups(){
  const saved=read('avtc_meetups');if(saved){try{meetups=JSON.parse(saved)}catch(x){}}
- chips('meetups');
- const list=meetups.filter(m=>filt.meetups==='all'||m.system===filt.meetups);
+ chips('meetups');kindChips();
+ $('meetups-wrap').classList.toggle('hid',filt.kind==='lfg');
+ const list=meetups.filter(m=>(filt.meetups==='all'||sid(m.system)===filt.meetups)&&!doneM(m));
  $('meetups-list').innerHTML=list.length?list.map(m=>{
   const s=sys(m.system);
-  const i=meetupInfo(m);
+  const i=meetupInfo(m),nh=played.some(g=>g.meetup_id===m.id&&g.happened===false);
+  if(nh){i.cls='red';i.label='✖ Did not happen';i.full=true}
   const mine=!!user&&i.list.some(p=>p.id===user.id);
   const id=esc(m.id);
-  const act=mine?`<button class="jn g" onclick="leaveMeetup('${id}')">Leave</button>`:i.full?`<button class="jn" disabled>Full</button>`:`<button class="jn" onclick="joinMeetup('${id}')">${user?'Join':'Sign in to join'}</button>`;
-  return `<div class="card ${i.cls}"><div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="st ${i.cls}">${i.label}</span></div><h3>${esc(m.title)}</h3><p>${esc(m.description)}</p><p>🕐 ${esc(fmtDate(m.date))}</p><p>📍 ${esc(m.location)}</p><p>👥 ${i.n}${i.spots?' / '+i.spots:''} players${i.spots?'':' (no limit)'} • needs ${i.min} to run</p>${i.n?`<p>${i.list.map(p=>esc(shownAuthor(p.name))).join(', ')}</p>`:''}<div class="meta"><span>By ${esc(shownAuthor(m.author))}</span><span class="row">${act}${isAdmin(user)?`<button class="del" onclick="deleteEvent('${id}')">Delete</button>`:''}</span></div></div>`}).join(''):'<div class="empty">No meetups here yet. Sign in and host one!</div>';
+  const act=mine?`<button class="jn g" onclick="leaveMeetup('${id}')">Leave</button>`:i.full?`<button class="jn" disabled>${nh?'Closed':'Full'}</button>`:`<button class="jn" onclick="joinMeetup('${id}')">${user?'Join':'Sign in to join'}</button>`;
+  return `<div class="card ${i.cls}"><div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="st ${i.cls}">${i.label}</span></div><h3>${esc(m.title)}</h3><p>${esc(m.description)}</p><p>🕐 ${esc(fmtDate(m.date))}</p>${nh?'':`<p>⏳ <b class="cd" data-d="${esc(m.date)}">${esc(cdText(m.date))}</b></p>`}<p>📍 ${esc(m.location)}</p><p>👥 ${i.n}${i.spots?' / '+i.spots:''} players${i.spots?'':' (no limit)'} • needs ${i.min} to run</p>${i.n?`<p>${i.list.map(p=>esc(pname(p.id,p.name))).join(', ')}</p>`:''}<button class="btn g" onclick="openMeetup('${id}')">💬 Open &amp; chat</button>${canReport(m)&&!nh?`<button class="btn g" onclick="openPlayed('${id}')">✔ Report game result</button>`:''}<div class="meta"><span>By ${esc(pname(m.author_id,m.author))}</span><span class="row">${act}${canEdit(m)?`<button class="jn g" onclick="editMeetup('${id}')">Edit</button><button class="del" onclick="deleteEvent('${id}')">Delete</button>`:''}</span></div></div>`}).join(''):'<div class="empty">No meetups here yet. Sign in and host one!</div>';
 }
 
 async function handleCreateLfg(e){
  e.preventDefault();
  if(needName())return;
- const l={id:Date.now().toString(),created_at:new Date().toISOString(),system:$('lfg-system').value,game:$('lfg-game').value,players:$('lfg-players').value,location:$('lfg-location').value,description:$('lfg-desc').value,author:displayName()};
- const dbErr=await saveRemote('lfg_listings',l);
+ if(editId){
+  const o=lfg.find(x=>x.id===editId);
+  if(!o||!canEdit(o)){toast('You can only edit your own posts');return}
+  const f={system:$('lfg-system').value,game:$('lfg-game').value,players:$('lfg-players').value,location:$('lfg-location').value,description:$('lfg-desc').value};
+  const er=await saveEdit('lfg_listings',editId,f);
+  if(er&&er!=='#local'){toast('Could not save: '+er);return}
+  Object.assign(o,f);store('avtc_lfg',JSON.stringify(lfg));
+  closeSheet('sh-lfg');resetForms();renderLfg();toast(er?'Updated on this device only':'Listing updated');return;
+ }
+ const l={id:Date.now().toString(),created_at:new Date().toISOString(),author_id:user.id,system:$('lfg-system').value,game:$('lfg-game').value,players:$('lfg-players').value,location:$('lfg-location').value,description:$('lfg-desc').value,author:displayName()};
+ const dbErr=await saveRemote('lfg_listings',(({author_id,...row})=>row)(l));
  lfg.unshift(l);store('avtc_lfg',JSON.stringify(lfg));
- closeSheet('sh-lfg');e.target.reset();renderLfg();markHosted();toast(dbErr?'Saved on this device only: '+dbErr:'Listing posted!');
+ closeSheet('sh-lfg');e.target.reset();renderLfg();toast(dbErr?'Saved on this device only: '+dbErr:'Listing posted!');
 }
 function renderLfg(){
  const saved=read('avtc_lfg');if(saved){try{lfg=JSON.parse(saved)}catch(x){}}
- chips('lfg');
- const list=lfg.filter(l=>filt.lfg==='all'||l.system===filt.lfg);
+ $('lfg-wrap').classList.toggle('hid',filt.kind==='meetups');
+ const list=lfg.filter(l=>filt.meetups==='all'||sid(l.system)===filt.meetups);
  $('lfg-list').innerHTML=list.length?list.map(l=>{
   const s=sys(l.system);
   return `<div class="card"><div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="badge" style="color:var(--ac2)">${esc(l.players)}</span></div>
-  <h3>${esc(l.game)}</h3><p>${esc(l.description)}</p>
-  <div class="meta"><span>📍 ${esc(l.location)}</span><span>By ${esc(shownAuthor(l.author))}</span>${isAdmin(user)?`<button class="del" onclick="deleteLfg('${esc(l.id)}')">Delete</button>`:''}</div></div>`}).join(''):'<div class="empty">No listings for this system right now.</div>';
+  <h3>${esc(l.game)}</h3><p>${esc(l.description)}</p><button class="btn g" onclick="openLfgChat('${esc(l.id)}')">💬 Open &amp; chat</button>
+  <div class="meta"><span>📍 ${esc(l.location)}</span><span>By ${esc(shownAuthor(l.author))}</span>${canEdit(l)?`<span class="row"><button class="jn g" onclick="editLfg('${esc(l.id)}')">Edit</button><button class="del" onclick="deleteLfg('${esc(l.id)}')">Delete</button></span>`:''}</div></div>`}).join(''):'<div class="empty">No listings for this system right now.</div>';
 }
 
+function logNames(){
+ const seen=new Set(),out=[];
+ const add=n=>{n=String(n).trim().slice(0,30);const k=n.toLowerCase();if(n&&!seen.has(k)){seen.add(k);out.push(n)}};
+ document.querySelectorAll('#lg-list input:checked').forEach(i=>add(i.value));
+ $('lg-guests').value.split(/[,\n]/).forEach(add);
+ return out;
+}
+function filterLog(){
+ const q=$('lg-filter').value.trim().toLowerCase();
+ document.querySelectorAll('#lg-list .pk').forEach(l=>l.classList.toggle('hid',!!q&&!l.dataset.n.includes(q)));
+}
+async function fillLogPicker(names){
+ await loadMembers();
+ const me=displayName().toLowerCase(),low=names.map(n=>n.toLowerCase());
+ const list=members.filter(x=>String(x.name).toLowerCase()!==me);
+ const have=list.map(x=>String(x.name).toLowerCase());
+ $('lg-filter').value='';
+ $('lg-list').innerHTML=list.length?list.map(x=>`<label class="pk" data-n="${esc(String(x.name).toLowerCase())}"><input type="checkbox" value="${esc(x.name)}" ${low.includes(String(x.name).toLowerCase())?'checked':''}> ${esc(x.name)}</label>`).join(''):'<p style="color:var(--mu);font-size:14px;margin:6px 0">No other members found. Type names below instead.</p>';
+ $('lg-guests').value=names.filter(n=>!have.includes(n.toLowerCase())).join(', ');
+}
+async function editLog(id){
+ const g=logs.find(x=>x.id===id);
+ if(!g||!canEdit(g))return;
+ resetForms();editLogId=id;
+ $('log-h').textContent='Edit Game';$('log-btn').textContent='Save Changes';
+ $('log-system').value=sid(g.system);$('log-game-title').value=g.game||'';$('log-game-score').value=g.score||'';
+ $('log-game-players').value=g.players||2;$('log-game-notes').value=g.notes||'';
+ await fillLogPicker(g.played_with||[]);
+ openSheet('sh-log');
+}
 async function handleLogGameSubmit(e){
  e.preventDefault();
  if(needName())return;
- const g={id:Date.now().toString(),created_at:new Date().toISOString(),system:$('log-system').value,game:$('log-game-title').value,score:$('log-game-score').value,players:parseInt($('log-game-players').value),notes:$('log-game-notes').value,author:displayName(),date:new Date().toISOString()};
- const dbErr=await saveRemote('game_logs',g);
+ const names=logNames();
+ if(names.length>10){toast('Only 10 other players allowed');return}
+ const f={system:$('log-system').value,game:$('log-game-title').value,score:$('log-game-score').value,players:Math.max(parseInt($('log-game-players').value)||1,names.length+1),notes:$('log-game-notes').value,played_with:names};
+ if(editLogId){
+  const o=logs.find(x=>x.id===editLogId);
+  if(!o||!canEdit(o)){toast('You can only edit your own games');return}
+  let er=await saveEdit('game_logs',editLogId,f);
+  if(er&&er!=='#local'&&/played_with/i.test(er)){const{played_with,...r}=f;er=await saveEdit('game_logs',editLogId,r)}
+  if(er&&er!=='#local'){toast('Could not save: '+er);return}
+  Object.assign(o,f);store('avtc_logs',JSON.stringify(logs));
+  closeSheet('sh-log');resetForms();renderGameLogs();toast(er?'Updated on this device only':'Game updated');return;
+ }
+ const g=Object.assign({id:Date.now().toString(),created_at:new Date().toISOString(),author_id:user.id,author:displayName(),date:new Date().toISOString()},f);
+ const row=(({author_id,...r})=>r)(g);
+ let dbErr=await saveRemote('game_logs',row);
+ if(dbErr&&/played_with/i.test(dbErr)){const{played_with,...r}=row;dbErr=await saveRemote('game_logs',r)}
  logs.unshift(g);store('avtc_logs',JSON.stringify(logs));
- store('avtc_user_games_count',String(parseInt(read('avtc_user_games_count')||'0')+1));
- closeSheet('sh-log');e.target.reset();$('log-game-players').value=2;
+ closeSheet('sh-log');resetForms();
  renderGameLogs();renderUserStats();toast(dbErr?'Saved on this device only: '+dbErr:'Game logged!');
 }
 function renderGameLogs(){
  const saved=read('avtc_logs');if(saved){try{logs=JSON.parse(saved)}catch(x){}}
+ renderClub();
  $('game-logs-list').innerHTML=logs.length?logs.map(g=>{
   const s=sys(g.system);
-  return `<div class="log"><div><b>${s.icon} ${esc(g.game)}</b><br><small>Result: ${esc(g.score)}</small>${g.notes?`<br><small><i>"${esc(g.notes)}"</i></small>`:''}</div>
-  <div style="text-align:right"><small>${esc(g.players)} players<br>${esc(shownAuthor(g.author))} • ${esc(logDate(g.date))}</small></div></div>`}).join(''):'<div class="empty">No games logged yet.</div>';
+  return `<div class="log"><div><b>${s.icon} ${esc(g.game)}</b><br><small>Result: ${esc(g.score)}</small>${(g.played_with&&g.played_with.length)?`<br><small>With: ${esc(g.played_with.map(n=>pname(null,n)).join(', '))}</small>`:''}${g.notes?`<br><small><i>"${esc(g.notes)}"</i></small>`:''}</div>
+  <div style="text-align:right"><small>${esc(g.players)} players<br>${esc(pname(g.author_id,g.author))} • ${esc(logDate(g.date))}</small>${canEdit(g)?`<br><button class="jn g" style="margin-top:6px" onclick="editLog('${esc(g.id)}')">Edit</button>`:''}</div></div>`}).join(''):'<div class="empty">No games logged yet.</div>';
+}
+function matchCount(){
+ if(!user)return 0;
+ return logs.filter(g=>g.author_id&&g.author_id===user.id).length+played.filter(g=>posted(g)&&(g.players||[]).some(p=>p.id===user.id&&!p.hidden)).length;
+}
+function localToday(){return new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)}
+async function recordLogin(){
+ if(!user)return;
+ const live=online&&!!sb&&!isLocal(),td=localToday(),key=user.id+'|'+td+'|'+live;
+ if(didLogin===key)return;
+ didLogin=key;
+ const k='avtc_days_'+user.id;
+ let days=[],fromServer=false;
+ try{days=JSON.parse(read(k)||'[]')}catch(x){}
+ if(live){
+  try{
+   await sb.from('login_days').insert([{user_id:user.id}]);
+   const{data,error}=await sb.from('login_days').select('day').eq('user_id',user.id).limit(2000);
+   if(!error&&data){days=data.map(x=>x.day);fromServer=true}
+  }catch(x){}
+ }
+ if(!fromServer&&!days.includes(td))days.push(td);
+ store(k,JSON.stringify(days));
+ loginDays=days.length;
+ renderUserStats();
+}
+function badgeGrid(days,mc,onlyEarned){
+ let u=0;
+ const done=b=>(b.kind==='days'?days:mc)>=b.n;
+ const card=b=>{
+  const ok=done(b),v=b.kind==='days'?days:mc;
+  if(ok)u++;
+  return `<div class="bd ${ok?'u':''}"><i>${b.icon}</i><b>${esc(b.name)}</b><p>${esc(b.desc)}</p>${ok?'':`<p>${v} / ${b.n}</p>`}</div>`;
+ };
+ const grp=(k,title)=>{
+  const list=ACHIEVEMENTS.filter(b=>b.kind===k&&(!onlyEarned||done(b)));
+  return list.length?`<label style="grid-column:1/-1;margin:6px 0 0">${title}</label>`+list.map(card).join(''):'';
+ };
+ return{html:(days==null?'':grp('days','Days logged in'))+grp('matches','Matches recorded'),earned:u,total:days==null?ACHIEVEMENTS.filter(b=>b.kind==='matches').length:ACHIEVEMENTS.length};
 }
 function renderUserStats(){
- const n=parseInt(read('avtc_user_games_count')||'0'),hosted=read('avtc_hosted_activity')==='true';
- $('stat-total-games').textContent=n;
- let u=0;
- $('badges-grid').innerHTML=ACHIEVEMENTS.map(b=>{
-  const ok=b.hosted?hosted:n>=b.n;if(ok)u++;
-  return `<div class="bd ${ok?'u':''}"><i>${b.icon}</i><b>${esc(b.name)}</b><p>${esc(b.desc)}</p></div>`}).join('');
- $('stat-total-badges').textContent=u+' / '+ACHIEVEMENTS.length;
+ const mc=matchCount();
+ $('stat-total-games').textContent=mc;
+ $('stat-total-days').textContent=loginDays;
+ const g=badgeGrid(loginDays,mc);
+ $('badges-grid').innerHTML=g.html;
+ $('stat-total-badges').textContent=g.earned+' / '+g.total;
 }
-function markHosted(){store('avtc_hosted_activity','true');renderUserStats()}
 
+const MEETUP_CAP=200;
+function capMeetups(keep){
+ if(meetups.length<=MEETUP_CAP)return;
+ const old=meetups.filter(m=>m.id!==keep).sort((a,b)=>String(a.date||'').localeCompare(String(b.date||'')));
+ const drop=new Set(old.slice(0,meetups.length-MEETUP_CAP).map(m=>m.id));
+ meetups=meetups.filter(m=>!drop.has(m.id));
+}
+async function removeMeetup(id){
+ if(online&&sb&&!isLocal()){
+  const{error}=await sb.from('meetups').delete().eq('id',id);
+  if(error&&!missingTable(error)){toast('Delete failed: '+error.message);return false}
+ }
+ meetups=meetups.filter(m=>m.id!==id);
+ store('avtc_meetups',JSON.stringify(meetups));
+ return true;
+}
 async function deleteEvent(id){
  let missing=false;
- if(!isAdmin(user)){alert('Unauthorized: admins only.');return}
+ const o=meetups.find(x=>x.id===id);
+ if(!o||!canEdit(o)){alert('Unauthorized: you can only delete your own posts.');return}
+ if(!confirm('Delete this meetup?'))return;
  if(online&&sb){
   const{error}=await sb.from('meetups').delete().eq('id',id);
   if(error){
@@ -646,6 +987,7 @@ async function joinMeetup(id){
  if(needName())return;
  const m=meetups.find(x=>x.id===id);
  if(!m)return;
+ if(played.some(g=>g.meetup_id===m.id&&g.happened===false)){toast('This meetup did not happen');return}
  m.players=m.players||[];
  if(m.players.some(p=>p.id===user.id))return;
  if(meetupInfo(m).full){toast('Seats full');return}
@@ -672,7 +1014,9 @@ async function leaveMeetup(id){
 
 async function deleteLfg(id){
  let missing=false;
- if(!isAdmin(user)){alert('Unauthorized: admins only.');return}
+ const o=lfg.find(x=>x.id===id);
+ if(!o||!canEdit(o)){alert('Unauthorized: you can only delete your own posts.');return}
+ if(!confirm('Delete this listing?'))return;
  if(online&&sb){
   const{error}=await sb.from('lfg_listings').delete().eq('id',id);
   if(error){
@@ -685,11 +1029,536 @@ async function deleteLfg(id){
  renderLfg();toast(missing?'Removed on this device only (database table missing)':'Listing deleted');
 }
 
-['renderMeetups','renderLfg','renderGameLogs'].forEach(n=>{const f=window[n];window[n]=function(){f.apply(this,arguments);renderNews()}});
+['renderMeetups','renderLfg','renderGameLogs','renderPlayed'].forEach(n=>{const f=window[n];window[n]=function(){f.apply(this,arguments);renderNews()}});
+
+function setOpacity(v){
+ v=Math.min(100,Math.max(35,parseInt(v)||78));
+ document.documentElement.style.setProperty('--op',v+'%');
+ $('op-val').textContent=v+'%';$('op-range').value=v;
+ store('avtc_ui_opacity',String(v));
+}
+function startSpace(){
+ const c=$('space'),x=c.getContext('2d');
+ let w,h,st=[];
+ const still=matchMedia('(prefers-reduced-motion:reduce)').matches;
+ const fit=()=>{
+  const r=window.devicePixelRatio||1;
+  w=innerWidth;h=innerHeight;c.width=w*r;c.height=h*r;x.setTransform(r,0,0,r,0,0);
+  st=Array.from({length:Math.round(w*h/4500)},()=>({x:Math.random()*w,y:Math.random()*h,z:Math.random()*2+.3,t:Math.random()*6}));
+  if(still)draw();
+ };
+ const draw=()=>{
+  x.clearRect(0,0,w,h);
+  for(const s of st){
+   x.globalAlpha=Math.min(1,.3+s.z*.28+Math.sin(s.t)*.15);
+   x.fillStyle=s.z>1.9?'#9fe8ff':s.z>1.2?'#ffffff':'#8aa4c8';
+   x.fillRect(s.x,s.y,s.z,s.z);
+  }
+ };
+ const step=()=>{
+  for(const s of st){s.y+=s.z*.4;s.t+=.03;if(s.y>h){s.y=-2;s.x=Math.random()*w}}
+  draw();requestAnimationFrame(step);
+ };
+ fit();addEventListener('resize',fit);
+ if(!still)step();
+}
+
+let clubMembers=[],pubCol=true,profLoaded=false,profById=Object.create(null),profByName=Object.create(null);
+const askedPub=new Set();
+let loginDays=0,didLogin='',editId=null,editLogId=null,ac=null,played=[],members=[],playedFor=null,pendQ=[],pendCur=null;
+const asked=new Set();
+const pIcon={confirmed:'✔',declined:'✖',pending:'⏳'};
+let plSt=1,pRev={self:false,pick:[],guests:[]};
+function canReport(m){return !!user&&!!m&&canEdit(m)&&!(Date.parse(m.date)>Date.now())}
+function pDate(d){return d?new Date(d+'T00:00').toLocaleDateString('en-US',{dateStyle:'medium'}):''}
+function playedInfo(g){
+ if(g.happened===false)return{cls:'red',label:'✖ Did not happen',state:'no'};
+ const pl=g.players||[];
+ const c=pl.filter(p=>p.status==='confirmed').length,d=pl.filter(p=>p.status==='declined').length;
+ if(d)return{cls:'red',label:'⚠ Disputed',state:'disputed'};
+ if(c===pl.length)return{cls:'green',label:'✔ Confirmed',state:'confirmed'};
+ return{cls:'amber',label:'⏳ '+c+' of '+pl.length+' confirmed',state:'pending'};
+}
+const posted=g=>playedInfo(g).state==='confirmed';
+const doneM=m=>played.some(g=>g.meetup_id===m.id&&posted(g));
+const mineP=g=>!!user&&(isAdmin(user)||g.created_by===user.id||(g.players||[]).some(p=>p.id===user.id));
+const seeP=g=>posted(g)||mineP(g);
+function playedNames(g){
+ return (g.players||[]).map(p=>esc(p.hidden?(user&&p.id===user.id?String(p.name)+' (not on your record)':'Private player'):pname(p.id,p.name))+' '+(pIcon[p.status]||'')).concat((g.guests||[]).map(n=>esc(n)+' (guest)')).join(', ');
+}
+function playedDetail(g){
+ const s=sys(g.system);
+ return `<div class="card" style="gap:6px"><span class="badge">${s.icon} ${s.name}</span><h3>${esc(g.game)}</h3><p>From meetup: ${esc(g.title||'Meetup')}</p><p>📅 ${esc(pDate(g.played_at))}</p>${g.result?`<p>Result: ${esc(g.result)}</p>`:''}${g.notes?`<p><i>"${esc(g.notes)}"</i></p>`:''}<p>👥 ${playedNames(g)}</p><small style="color:var(--mu)">Reported by ${esc(pname(g.created_by,g.created_by_name))}</small></div>`;
+}
+function renderPlayed(){
+ const saved=read('avtc_played');if(saved){try{played=JSON.parse(saved)}catch(x){}}
+ const el=$('played-list');if(!el)return;
+ const vis=played.filter(seeP);
+ el.innerHTML=vis.length?vis.slice(0,30).map(g=>{
+  const i=playedInfo(g),note=i.state==='pending'?'<small style="color:var(--mu)">Posted to player records once everyone confirms.</small>':i.state==='disputed'?'<small style="color:var(--mu)">A player said this is not correct. The reporter can delete it and report again.</small>':'',s=sys(g.system),me=user&&(g.players||[]).find(p=>p.id===user.id),gid=esc(g.id);
+  const ask=me&&me.status==='pending'?`<div class="row"><button class="jn" onclick="respondPlayed('${gid}','confirmed')">Confirm</button><button class="jn g" onclick="respondPlayed('${gid}','confirmed',true)">Correct, keep off my record</button><button class="jn g" onclick="respondPlayed('${gid}','declined')">Not correct</button></div>`:'';
+  const del=canEdit({author_id:g.created_by})?`<div><button class="del" onclick="deletePlayed('${gid}')">Delete</button></div>`:'';
+  return `<div class="log" style="flex-direction:column"><div class="row" style="justify-content:space-between"><b>${s.icon} ${esc(g.game)}</b><span class="st ${i.cls}">${i.label}</span></div><small>${esc(g.title||'Meetup')} • ${esc(pDate(g.played_at))}${g.result?' • '+esc(g.result):''}</small>${g.happened===false?'':`<small>👥 ${playedNames(g)}</small>`}${note}${ask}<div><button class="jn g" onclick="openPlayedGame('${gid}')">View</button></div>${del}</div>`}).join(''):'<div class="empty">No played meetups reported yet.</div>';
+}
+async function loadMembers(){
+ members=[];
+ if(online&&sb&&!isLocal()){
+  const{data}=await sb.from('profiles').select('id,username').order('username').limit(500);
+  if(data)members=data.map(x=>({id:x.id,name:x.username}));
+ }
+}
+async function openPlayed(id){
+ if(!user){openAuthModal('login');return}
+ if(needName())return;
+ const m=meetups.find(x=>x.id===id);
+ if(!m||!canReport(m))return;
+ playedFor=id;
+ $('pl-meetup').textContent=m.title+' • '+fmtDate(m.date);
+ $('pl-system').value=sid(m.system);
+ ['pl-game','pl-result','pl-notes','pl-gadd'].forEach(k=>{$(k).value=''});
+ $('pl-happened').value='yes';
+ const td=localToday(),d=(m.date||'').slice(0,10);
+ $('pl-date').max=td;$('pl-date').value=d&&d<=td?d:td;
+ await loadMembers();
+ const joined=(m.players||[]).filter(p=>p.id!==user.id);
+ joined.forEach(p=>{if(!members.some(x=>x.id===p.id))members.push({id:p.id,name:p.name})});
+ members=members.filter(x=>x.id!==user.id).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+ pRev={self:(m.players||[]).some(p=>p.id===user.id)||m.author_id===user.id,pick:joined.map(p=>({id:p.id,name:p.name})),guests:[]};
+ plStep(1);
+ openSheet('sh-played');
+}
+function plStep(n){
+ plSt=n;
+ const no=$('pl-happened').value==='no';
+ $('pl-s1').classList.toggle('hid',n!==1);
+ $('pl-s2').classList.toggle('hid',n!==2);
+ $('pl-play-f').classList.toggle('hid',no);
+ $('pl-back').classList.toggle('hid',n!==2);
+ $('pl-btn').textContent=n===2?'Submit report':no?'Delete meetup':'Review players';
+ if(n===2)renderRev();
+}
+const revRow=(t,fn)=>`<div class="log" style="align-items:center"><span>${t}</span><button type="button" class="del" onclick="${fn}">Remove</button></div>`;
+function renderRev(){
+ const rows=[];
+ if(pRev.self)rows.push(revRow(esc(displayName())+' (you)','remSelf()'));
+ pRev.pick.forEach((p,i)=>rows.push(revRow(esc(p.name)+' <small>member, will be asked to confirm</small>','remPick('+i+')')));
+ pRev.guests.forEach((n,i)=>rows.push(revRow(esc(n)+' <small>not on the app</small>','remGuest('+i+')')));
+ $('pl-rev').innerHTML=rows.length?rows.join(''):'<div class="empty" style="padding:12px 0">No players yet.</div>';
+ const r=$('pl-result').value.trim();
+ $('pl-sum').innerHTML=`<b>${esc($('pl-game').value.trim())}</b><br><small>${esc(sys($('pl-system').value).name)} • ${esc(pDate($('pl-date').value))}${r?' • '+esc(r):''}</small>`;
+ const avail=members.filter(x=>!pRev.pick.some(p=>p.id===x.id));
+ const opts=(pRev.self?'':'<option value="self">Me ('+esc(displayName())+')</option>')+avail.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join('');
+ $('pl-add').innerHTML='<option value="">'+(opts?'Choose a member':'No other members')+'</option>'+opts;
+}
+function remSelf(){pRev.self=false;renderRev()}
+function remPick(i){pRev.pick.splice(i,1);renderRev()}
+function remGuest(i){pRev.guests.splice(i,1);renderRev()}
+function addPick(){
+ const v=$('pl-add').value;
+ if(!v)return;
+ if(v==='self')pRev.self=true;
+ else{const x=members.find(m=>m.id===v);if(x&&!pRev.pick.some(p=>p.id===v))pRev.pick.push({id:x.id,name:x.name})}
+ renderRev();
+}
+function addGuest(){
+ const el=$('pl-gadd'),n=el.value.trim().slice(0,30);
+ if(!n)return;
+ if(pRev.guests.length>=10){toast('Only 10 other players allowed');return}
+ if(!pRev.guests.some(x=>x.toLowerCase()===n.toLowerCase()))pRev.guests.push(n);
+ el.value='';renderRev();
+}
+async function handlePlayed(e){
+ e.preventDefault();
+ if(needName())return;
+ const m=meetups.find(x=>x.id===playedFor);
+ if(!m||!canReport(m)){toast('Only the host can report this meetup');return}
+ const no=$('pl-happened').value==='no';
+ if(no){
+  if(!confirm('Delete this meetup? Its player list and chat will be deleted. This cannot be undone.'))return;
+  if(!(await removeMeetup(m.id)))return;
+  closeSheet('sh-played');renderMeetups();toast('Meetup deleted');return;
+ }
+ if(!no&&plSt===1){
+  if(!$('pl-game').value.trim()){toast('Enter the game played');return}
+  if(!$('pl-date').value){toast('Choose the date played');return}
+  plStep(2);return;
+ }
+ const total=(pRev.self?1:0)+pRev.pick.length+pRev.guests.length;
+ if(total<2){toast('Add at least two players');return}
+ const rec={id:Date.now().toString(),created_at:new Date().toISOString(),meetup_id:m.id,system:$('pl-system').value,title:m.title,game:$('pl-game').value.trim(),result:$('pl-result').value.trim(),notes:$('pl-notes').value.trim(),played_at:$('pl-date').value||localToday(),guests:pRev.guests.slice(),created_by_name:displayName()};
+ const players=(pRev.self?[{id:user.id,name:displayName(),status:'confirmed'}]:[]).concat(pRev.pick.map(p=>({id:p.id,name:p.name,status:'pending'})));
+ let dbErr=await saveRemote('played_meetups',rec);
+ if(!dbErr&&players.length&&online&&sb&&!isLocal()){
+  const{error}=await sb.from('played_players').insert(players.map(p=>({played_id:rec.id,user_id:p.id,username:p.name,status:p.status})));
+  if(error)dbErr=error.message;
+ }
+ played.unshift(Object.assign({created_by:user.id,players},rec));
+ store('avtc_played',JSON.stringify(played));
+ closeSheet('sh-played');renderPlayed();renderUserStats();renderMeetups();renderClub();
+ const asks=pRev.pick.length;
+ toast(dbErr?'Saved on this device only: '+dbErr:asks?'Report saved. It is posted once all members confirm.':'Game saved and posted!');
+}
+function openPlayedGame(id){
+ const g=played.find(x=>x.id===id);
+ if(!g)return;
+ const i=playedInfo(g);
+ const info=playedDetail(g)+`<div class="row" style="margin-top:10px"><span class="st ${i.cls}">${i.label}</span></div>`;
+ if(g.meetup_id&&meetups.some(x=>x.id===g.meetup_id)){startChat('meetup',g.meetup_id,g.title||'Meetup',info);return}
+ $('pg-body').innerHTML=info+'<p style="color:var(--mu);font-size:13px;margin:10px 0 0">The meetup and its chat are no longer available. This record is kept on the account of each player.</p>';
+ openSheet('sh-pg');
+}
+async function respondPlayed(id,status,hide){
+ const g=played.find(x=>x.id===id);
+ const me=g&&user&&(g.players||[]).find(p=>p.id===user.id);
+ if(!me)return;
+ if(online&&sb&&!isLocal()){
+  const{data,error}=await sb.from('played_players').update(hide?{status,hidden:true}:{status}).eq('played_id',id).eq('user_id',user.id).select('played_id');
+  if(error){toast(hide&&/hidden/i.test(error.message)?'Could not save: the club database needs an update':'Could not save: '+error.message);return}
+  if(!(data&&data.length)){toast('Could not save: not allowed');return}
+ }
+ me.status=status;if(hide)me.hidden=true;
+ store('avtc_played',JSON.stringify(played));
+ renderPlayed();renderUserStats();renderClub();
+ toast(hide?'Thanks, confirmed and kept off your record':status==='confirmed'?'Thanks, game confirmed':'Marked as not correct');
+}
+async function deletePlayed(id){
+ const g=played.find(x=>x.id===id);
+ if(!g||!canEdit({author_id:g.created_by})){alert('Unauthorized: you can only delete games you reported.');return}
+ if(!confirm('Delete this played game?'))return;
+ if(online&&sb&&!isLocal()){
+  const{error}=await sb.from('played_meetups').delete().eq('id',id);
+  if(error&&!missingTable(error)){toast('Delete failed: '+error.message);return}
+ }
+ played=played.filter(x=>x.id!==id);
+ store('avtc_played',JSON.stringify(played));
+ renderPlayed();renderUserStats();renderMeetups();renderClub();toast('Played game deleted');
+}
+function checkPending(){
+ if(!user||document.querySelector('.ov.on'))return;
+ pendQ=played.filter(g=>!asked.has(g.id)&&(g.players||[]).some(p=>p.id===user.id&&p.status==='pending')).map(g=>g.id);
+ if(pendQ.length)showConfirm();
+}
+function showConfirm(){
+ const g=played.find(x=>x.id===pendQ[0]);
+ if(!g){closeSheet('sh-confirm');return}
+ pendCur=g.id;
+ $('cf-count').textContent=pendQ.length>1?pendQ.length+' games are waiting for your answer.':'Please check the details below. It is posted on every player\'s record once all members confirm.';
+ $('cf-body').innerHTML=playedDetail(g);
+ openSheet('sh-confirm');
+}
+async function answerConfirm(st){
+ const id=pendCur;
+ pendQ.shift();asked.add(id);
+ await respondPlayed(id,st==='hidden'?'confirmed':st,st==='hidden');
+ if(pendQ.length)showConfirm();else closeSheet('sh-confirm');
+}
+function dismissConfirm(){
+ pendQ.forEach(i=>asked.add(i));pendQ=[];
+ closeSheet('sh-confirm');
+}
+function isPrivate(id,name){
+ if(!profLoaded)return false;
+ const nm=String(name||'').toLowerCase();
+ if(user&&((id&&id===user.id)||(user.username&&nm===String(user.username).toLowerCase())))return false;
+ const q=(id&&profById[id])||profByName[nm];
+ return !!q&&!q.pub;
+}
+function pname(id,name){return isPrivate(id,name)?'Private member':shownAuthor(name)}
+async function loadClub(){
+ let list=[];
+ profLoaded=false;profById=Object.create(null);profByName=Object.create(null);
+ if(online&&sb){
+  const{data,error}=await sb.from('profiles').select('id,username,is_public').limit(1000);
+  if(!error&&data){
+   profLoaded=true;
+   data.forEach(x=>{const q={pub:x.is_public===true};profById[x.id]=q;profByName[String(x.username).toLowerCase()]=q});
+   list=data.filter(x=>x.is_public===true).map(x=>({id:x.id,name:x.username})).sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  }
+ }else{
+  let u=null;
+  try{u=JSON.parse(read('avtc_local_user'))}catch(x){}
+  if(u&&u.is_public&&u.username)list=[{id:u.id,name:u.username}];
+ }
+ clubMembers=list;loadAllData();
+}
+function memberGames(m){
+ const nm=String(m.name).toLowerCase();
+ return{
+  logs:logs.filter(g=>(g.author_id&&g.author_id===m.id)||(!g.author_id&&String(g.author||'').toLowerCase()===nm)),
+  played:played.filter(g=>posted(g)&&(g.players||[]).some(p=>p.id===m.id&&!p.hidden))
+ };
+}
+function renderClub(){
+ const el=$('club-list');if(!el)return;
+ el.innerHTML=clubMembers.length?clubMembers.map(m=>{
+  const g=memberGames(m),n=g.logs.length+g.played.length;
+  return `<div class="log"><div><b>${esc(m.name)}</b><br><small>${n} ${n===1?'game':'games'} recorded</small></div><button class="jn" onclick="openMember('${esc(m.id)}')">View</button></div>`}).join(''):'<div class="empty">No members have made their account public yet.</div>';
+}
+async function openMember(id){
+ const m=clubMembers.find(x=>x.id===id);
+ if(!m)return;
+ const g=memberGames(m);
+ const rows=g.logs.map(x=>{
+  const s=sys(x.system);
+  return{t:Date.parse(x.created_at)||0,h:`<div class="log"><div><b>${s.icon} ${esc(x.game)}</b><br><small>Result: ${esc(x.score)}</small>${(x.played_with&&x.played_with.length)?`<br><small>With: ${esc(x.played_with.map(n=>pname(null,n)).join(', '))}</small>`:''}${x.notes?`<br><small><i>"${esc(x.notes)}"</i></small>`:''}</div><div style="text-align:right"><small>${esc(x.players)} players<br>${esc(logDate(x.date))}</small></div></div>`};
+ }).concat(g.played.map(x=>{
+  const s=sys(x.system),i=playedInfo(x);
+  return{t:Date.parse(x.created_at)||0,h:`<div class="log"><div><b>${s.icon} ${esc(x.game)}</b><br><small>${esc(x.title||'Meetup')}${x.result?' • '+esc(x.result):''}</small><br><span class="st ${i.cls}">${i.label}</span></div><div style="text-align:right"><small>${esc(pDate(x.played_at))}</small><br><button class="jn g" style="margin-top:6px" onclick="openPlayedGame('${esc(x.id)}')">View</button></div></div>`};
+ })).sort((a,b)=>b.t-a.t);
+ const bg=badgeGrid(await memberDays(m),g.logs.length+g.played.length,true);
+ $('mb-badges').innerHTML=bg.earned?bg.html:'<div class="empty" style="padding:12px 0">No achievements earned yet.</div>';
+ $('mb-earned').textContent=bg.earned?'('+bg.earned+' earned)':'';
+ $('mb-name').textContent=m.name;
+ $('mb-count').textContent=rows.length+(rows.length===1?' game recorded':' games recorded');
+ $('mb-games').innerHTML=rows.length?rows.map(r=>r.h).join(''):'<div class="empty">No games recorded yet.</div>';
+ openSheet('sh-member');
+}
+function renderPublicSetting(){
+ if(!user)return;
+ const live=online&&!!sb&&!isLocal();
+ const blocked=live&&(!pubCol||!user.hasProfile);
+ $('pub-on').checked=user.is_public===true;
+ $('pub-on').disabled=blocked;
+ $('pub-note').textContent=blocked?(user.hasProfile===false?'Choose a username first.':'Not available yet: the club database needs an update.'):user.is_public===true?'Your account is listed and your recorded games are visible to everyone.':user.is_public===false?'Your account is private and not listed.':'You have not chosen yet.';
+}
+function checkPublic(){
+ if(!user||!user.username||askedPub.has(user.id)||document.querySelector('.ov.on'))return false;
+ const live=online&&!!sb&&!isLocal();
+ if(live?(!pubCol||!user.hasProfile||user.is_public!==null):(user.is_public!=null))return false;
+ openSheet('sh-public');
+ return true;
+}
+function checkPrompts(){if(!checkPublic())checkPending()}
+function dismissPublic(){
+ if(user)askedPub.add(user.id);
+ closeSheet('sh-public');
+}
+async function setPublic(v){
+ if(!user)return;
+ const fail=m=>{renderPublicSetting();toast(m)};
+ if(online&&sb&&!isLocal()){
+  if(!pubCol)return fail('Club records are not available yet');
+  if(!user.hasProfile)return fail('Choose a username first');
+  const{data,error}=await sb.from('profiles').update({is_public:v}).eq('id',user.id).select('id');
+  if(error)return fail('Could not save: '+error.message);
+  if(!(data&&data.length))return fail('Could not save: not allowed');
+ }else{
+  user.is_public=v;
+  store('avtc_local_user',JSON.stringify(user));
+ }
+ user.is_public=v;
+ askedPub.add(user.id);
+ closeSheet('sh-public');
+ renderPublicSetting();
+ await loadClub();
+ toast(v?'Your account is now public':'Your account is private');
+}
+async function memberDays(m){
+ if(user&&m.id===user.id)return loginDays;
+ if(!online||!sb||String(m.id).startsWith('local'))return null;
+ const{count,error}=await sb.from('login_days').select('day',{count:'exact',head:true}).eq('user_id',m.id);
+ return error||count==null?null:count;
+}
+let chatId=null,chatMsgs=[],chatTimer=null,chatLocal=false,chatCount=-1,chatTable='meetup_messages',chatCol='meetup_id';
+function chatKey(){return 'avtc_chat_'+(chatTable==='lfg_messages'?'lfg_':'')+chatId}
+async function loadChat(){
+ const id=chatId;
+ if(!id)return;
+ let local=true,rows=[];
+ if(online&&sb){
+  const{data,error}=await sb.from(chatTable).select('*').eq(chatCol,id).order('created_at',{ascending:true}).limit(200);
+  if(!error){rows=data||[];local=false}
+ }
+ if(chatId!==id)return;
+ if(local){try{rows=JSON.parse(read(chatKey())||'[]')}catch(x){rows=[]}}
+ chatLocal=local;chatMsgs=rows;
+ $('chat-note').textContent=local?'Chat is saved on this device only for now.':'';
+ renderChat();
+}
+function renderChat(){
+ const el=$('chat-list');
+ if(!el)return;
+ const near=el.scrollHeight-el.scrollTop-el.clientHeight<60;
+ el.innerHTML=chatMsgs.length?chatMsgs.map(m=>{
+  const mine=!!user&&m.user_id===user.id;
+  const del=canEdit({author_id:m.user_id})?`<button class="del" onclick="deleteMsg('${esc(m.id)}')">Delete</button>`:'';
+  return `<div class="log" style="flex-direction:column;gap:4px"><div class="row" style="justify-content:space-between;align-items:center"><small><b style="color:${mine?'var(--ac)':'var(--tx)'}">${esc(pname(m.user_id,m.username))}</b> • ${esc(timeAgo(Date.parse(m.created_at)))}</small>${del}</div><span style="font-size:15px;word-break:break-word">${esc(m.body)}</span></div>`}).join(''):'<div class="empty" style="padding:16px 0">No messages yet. Ask the first question!</div>';
+ if(near||chatCount!==chatMsgs.length)el.scrollTop=el.scrollHeight;
+ chatCount=chatMsgs.length;
+}
+function startChat(kind,id,title,info){
+ const l=kind==='lfg';
+ chatTable=l?'lfg_messages':'meetup_messages';chatCol=l?'post_id':'meetup_id';
+ chatId=id;chatCount=-1;chatMsgs=[];
+ $('mu-title').textContent=title;
+ $('mu-info').innerHTML=info;
+ $('mu-chat-label').textContent=l?'Listing chat':'Meetup chat';
+ $('chat-form').classList.toggle('hid',!user);
+ $('chat-signin').classList.toggle('hid',!!user);
+ $('chat-list').innerHTML='';
+ $('chat-note').textContent='';
+ openSheet('sh-mu');
+ loadChat();
+ clearInterval(chatTimer);
+ chatTimer=setInterval(()=>{if($('sh-mu').classList.contains('on'))loadChat();else{clearInterval(chatTimer);chatId=null}},6000);
+}
+function openMeetup(id){
+ const m=meetups.find(x=>x.id===id);
+ if(!m)return;
+ const s=sys(m.system),i=meetupInfo(m),nh=played.some(g=>g.meetup_id===id&&g.happened===false);
+ if(nh){i.cls='red';i.label='✖ Did not happen'}
+ startChat('meetup',id,m.title,`<div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="st ${i.cls}">${i.label}</span></div><p style="margin:8px 0 0;color:var(--mu)">${esc(m.description)}</p><p style="margin:6px 0 0;color:var(--mu)">🕐 ${esc(fmtDate(m.date))}</p>${nh?'':`<p style="margin:6px 0 0;color:var(--mu)">⏳ <b class="cd" data-d="${esc(m.date)}">${esc(cdText(m.date))}</b></p>`}<p style="margin:6px 0 0;color:var(--mu)">📍 ${esc(m.location)}</p><p style="margin:6px 0 0;color:var(--mu)">👥 ${i.n}${i.spots?' / '+i.spots:''} players: ${esc(i.list.map(p=>pname(p.id,p.name)).join(', ')||'none yet')}</p>`);
+}
+function openLfgChat(id){
+ const l=lfg.find(x=>x.id===id);
+ if(!l)return;
+ const s=sys(l.system);
+ startChat('lfg',id,l.game,`<div class="row" style="justify-content:space-between"><span class="badge">${s.icon} ${s.name}</span><span class="badge" style="color:var(--ac2)">${esc(l.players)}</span></div><p style="margin:8px 0 0;color:var(--mu)">${esc(l.description)}</p><p style="margin:6px 0 0;color:var(--mu)">📍 ${esc(l.location)}</p><p style="margin:6px 0 0;color:var(--mu)">By ${esc(shownAuthor(l.author))}</p>`);
+}
+function closeChat(){
+ closeSheet('sh-mu');
+ clearInterval(chatTimer);
+ chatId=null;
+}
+async function sendChat(e){
+ e.preventDefault();
+ if(!user){closeChat();openAuthModal('login');return}
+ if(needName())return;
+ const body=$('chat-input').value.trim();
+ if(!body)return;
+ if(body.length>500){toast('Messages can be 500 characters at most');return}
+ if(chatLocal||isLocal()){
+  let arr=[];
+  try{arr=JSON.parse(read(chatKey())||'[]')}catch(x){}
+  arr.push({id:Date.now().toString(),meetup_id:chatId,user_id:user.id,username:displayName(),body,created_at:new Date().toISOString()});
+  store(chatKey(),JSON.stringify(arr.slice(-200)));
+ }else{
+  const{error}=await sb.from(chatTable).insert([{[chatCol]:chatId,body}]);
+  if(error){toast('Could not send: '+error.message);return}
+ }
+ $('chat-input').value='';
+ await loadChat();
+}
+async function deleteMsg(id){
+ const m=chatMsgs.find(x=>String(x.id)===String(id));
+ if(!m||!canEdit({author_id:m.user_id}))return;
+ if(!confirm('Delete this message?'))return;
+ if(chatLocal||isLocal()){
+  let arr=[];
+  try{arr=JSON.parse(read(chatKey())||'[]')}catch(x){}
+  store(chatKey(),JSON.stringify(arr.filter(x=>String(x.id)!==String(id))));
+ }else{
+  const{error}=await sb.from(chatTable).delete().eq('id',id);
+  if(error){toast('Delete failed: '+error.message);return}
+ }
+ await loadChat();
+ toast('Message deleted');
+}
+async function saveCred(email,password){
+ if(!$('remember-pass').checked){try{localStorage.removeItem('avtc_remember_pass')}catch(x){}return}
+ store('avtc_remember_pass','1');
+ try{if(window.PasswordCredential&&navigator.credentials)await navigator.credentials.store(new PasswordCredential({id:email,password,name:email}))}catch(x){}
+}
+async function fillCred(){
+ try{
+  if(!(window.PasswordCredential&&navigator.credentials))return;
+  const c=await navigator.credentials.get({password:true,mediation:'optional'});
+  if(c&&c.password){
+   if(!$('auth-email').value)$('auth-email').value=c.id;
+   if(!$('auth-password').value)$('auth-password').value=c.password;
+  }
+ }catch(x){}
+}
+function openDelete(){
+ $('del-confirm').value='';
+ $('del-err').style.display='none';
+ openSheet('sh-delacct');
+}
+async function deleteAccount(){
+ const err=$('del-err');
+ err.style.display='none';
+ const fail=m=>{err.textContent=m;err.style.display='block'};
+ if($('del-confirm').value.trim()!=='DELETE')return fail('Type DELETE in capital letters to confirm.');
+ if(!user)return;
+ const uid=user.id;
+ if(online&&sb&&!isLocal()){
+  const{error}=await sb.rpc('delete_my_account');
+  if(error)return fail(/function|schema cache/i.test(error.message)?'Account deletion is not set up yet. The club database needs an update.':'Could not delete: '+error.message);
+  try{await sb.auth.signOut({scope:'local'})}catch(x){}
+ }
+ ['avtc_local_user','avtc_days_'+uid,'avtc_remember_pass','avtc_remembered_email'].forEach(k=>{try{localStorage.removeItem(k)}catch(x){}});
+ closeSheet('sh-delacct');
+ user=null;loginDays=0;didLogin='';
+ updateAuthUI();switchTab('home');loadClub();
+ toast('Your account was deleted');
+}
+function canEdit(p){return !!user&&!!p&&(isAdmin(user)||(!!p.author_id&&p.author_id===user.id))}
+function resetForms(){
+ editId=null;
+ $('meetup-h').textContent='Host a Meetup';$('meetup-btn').textContent='Publish Meetup';
+ $('lfg-h').textContent='Post a Listing';$('lfg-btn').textContent='Post Listing';
+ $('sh-meetup').querySelector('form').reset();$('sh-lfg').querySelector('form').reset();
+ $('meetup-spots').disabled=false;
+ editLogId=null;
+ $('log-h').textContent='Log a Game';$('log-btn').textContent='Save Game';
+ $('sh-log').querySelector('form').reset();
+}
+function editMeetup(id){
+ const m=meetups.find(x=>x.id===id);
+ if(!m||!canEdit(m))return;
+ resetForms();editId=id;
+ $('meetup-h').textContent='Edit Meetup';$('meetup-btn').textContent='Save Changes';
+ $('meetup-system').value=sid(m.system);$('meetup-title').value=m.title||'';$('meetup-date').value=m.date||'';
+ $('meetup-location').value=m.location||'';$('meetup-desc').value=m.description||'';
+ $('meetup-unlimited').checked=!m.spots;$('meetup-spots').disabled=!m.spots;$('meetup-spots').value=m.spots||4;
+ $('meetup-min').value=m.min_players||1;
+ openSheet('sh-meetup');
+}
+function editLfg(id){
+ const l=lfg.find(x=>x.id===id);
+ if(!l||!canEdit(l))return;
+ resetForms();editId=id;
+ $('lfg-h').textContent='Edit Listing';$('lfg-btn').textContent='Save Changes';
+ $('lfg-system').value=sid(l.system);$('lfg-game').value=l.game||'';$('lfg-players').value=l.players||'';
+ $('lfg-location').value=l.location||'';$('lfg-desc').value=l.description||'';
+ openSheet('sh-lfg');
+}
+async function saveEdit(table,id,patch){
+ if(!online||!sb||isLocal())return '#local';
+ const{data,error}=await sb.from(table).update(patch).eq('id',id).select('id');
+ if(error)return(missingTable(error)&&!/column/i.test(error.message))?'#local':error.message;
+ return data&&data.length?'':'#local';
+}
+function setSound(on){store('avtc_sound',on?'on':'off');if(on)sfx('ok')}
+function sfx(k){
+ if(read('avtc_sound')==='off')return;
+ try{
+  ac=ac||new(window.AudioContext||window.webkitAudioContext)();
+  if(ac.state==='suspended')ac.resume();
+  const seq={click:[[880,.05,'square']],tab:[[520,.04,'square'],[780,.05,'square']],open:[[400,.05,'sine'],[640,.07,'sine']],ok:[[660,.07,'sine'],[990,.11,'sine']],err:[[220,.12,'sawtooth'],[165,.16,'sawtooth']],del:[[440,.07,'triangle'],[220,.15,'triangle']]}[k]||[];
+  let t=ac.currentTime;
+  seq.forEach(([f,d,w])=>{
+   const o=ac.createOscillator(),g=ac.createGain();
+   o.type=w;o.frequency.setValueAtTime(f,t);
+   g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.07,t+.01);g.gain.exponentialRampToValueAtTime(.0001,t+d);
+   o.connect(g);g.connect(ac.destination);o.start(t);o.stop(t+d+.02);t+=d*.8;
+  });
+ }catch(e){}
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('button');
+ if(!b||b.disabled)return;
+ if(b.classList.contains('del'))sfx('del');
+ else if(b.id==='fab')sfx('open');
+ else if(b.closest('nav.bar'))sfx('tab');
+ else sfx('click');
+});
 
 let tt;
 function toast(msg){
- const t=$('toast');t.textContent=msg;t.classList.add('on');
+ const t=$('toast');t.textContent=msg;
+ setTimeout(()=>sfx(/fail|could not|cannot|not allowed|unauthor|full|must|choose|only|enter|taken|invalid|lower|error/i.test(msg)?'err':'ok'),90);
+ t.classList.add('on');
  clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),3000);
 }
 </script>
