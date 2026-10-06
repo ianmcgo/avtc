@@ -209,7 +209,8 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
 <label>Game System</label><select id="log-system"></select>
 <label>Scenario / Mission</label><input id="log-game-title" required placeholder="e.g., Only War, Skirmish, Dogfight">
 <div class="two"><div><label>Result</label><input id="log-game-score" required placeholder="Victory / 12-8"></div><div><label>Players</label><input type="number" min="1" max="20" id="log-game-players" required value="2"></div></div>
-<label>Who did you play with?</label>
+<label>Date Played</label><input type="date" id="log-game-date" required>
+<label>Who did you play with? Members are asked to confirm</label>
 <input id="lg-filter" placeholder="Search members" oninput="filterLog()" autocomplete="off">
 <div id="lg-list" style="max-height:150px;overflow:auto;margin-top:6px;border:1px solid var(--line);padding:4px 8px"></div>
 <label>Others (not on the app)</label><input id="lg-guests" maxlength="300" placeholder="Names separated by commas">
@@ -324,7 +325,7 @@ a.btn{display:inline-block;text-decoration:none;text-align:center}
 <div id="toast"></div>
 
 <script>
-const VERSION='2.23.0',BUILT='2026-10-05 10:22 PM PT';
+const VERSION='2.24.0',BUILT='2026-10-05 10:32 PM PT';
 const SUPABASE_URL='https://cizwgastmjxupnyrwwoq.supabase.co';
 const SUPABASE_KEY='sb_publishable_udOIKINsu3-rZnyp9OiFnA_4qSNZxue';
 const ADMIN_EMAIL='maunderingcabal@gmail.com';
@@ -354,6 +355,7 @@ const GAMES=[
 {id:'sc',blurb:'Terran, Zerg and Protoss clash on the tabletop.',summary:['Tabletop games set in the StarCraft universe, where the human Terrans, the insectoid Zerg and the psionic Protoss fight for control of the sector.','The club admin should update this summary and the links below with the specific StarCraft rules the club plays.'],rules:'https://starcraft-tmg.com/files/downloads/StarCraft-TMG_EN.pdf',builder:'https://www.starcraft-builder.com/'}
 ];
 const UPDATES=[
+{v:'2.24.0',d:'2026-10-05',t:['When you log a game you can now choose the date it was played (today by default, never in the future); you can change it when you edit the game','Members you add to a logged game, when you log it or when you edit it, are now asked to confirm the next time they sign in, with the same three answers as hosted games: Yes, Correct but do not record it for me, or Not correct','Members can also answer from Recent Community Games on the Record tab','Until they answer, the member shows as pending in the game and it is not on their record','If they confirm, the game is added to their record: Matches Recorded, badges and member page. If they say Not correct they are not added to the game','If they choose do not record it for me, the game is left off their record and others see Private player','Help updated']},
 {v:'2.23.0',d:'2026-10-05',t:['The club now keeps at most 200 meetups: when a new meetup is posted and the club is full, the oldest meetups (by date) are deleted to make room','A deleted meetup takes its player list and chat with it','Played games from those meetups are kept on each player\'s record; View still shows the game details, but the meetup and its chat can no longer be opened','Help updated']},
 {v:'2.22.0',d:'2026-10-05',t:['If the host reports that a meetup did not happen, the meetup is now deleted (after a confirmation), together with its player list and chat','The meetup chat stays open on a finished meetup: tap View on the played game, in Played Meetups or on a member page, and the chat opens right there with the game details','Closing the chat from a member page takes you back to that page','Help updated']},
 {v:'2.21.0',d:'2026-10-05',t:['The Record tab is now only for signed-in members: it is hidden from the bottom bar when you are signed out, and the Club Members list and member pages need an account','Once every player has confirmed a played meetup, the meetup leaves the Meetups list and the News feed, and the game lives on in Played Meetups on the Record tab','New View button on every played meetup, in your own Played Meetups list and on member pages, opens the full details: game, result, date, notes, players and status','From that view you can open the meetup chat, as long as the meetup still exists','Help updated']},
@@ -397,11 +399,12 @@ const HELP=[
 ['Remembering your password','<ul><li>On the sign-in sheet, tick Remember my email to have your email filled in next time, or Remember my password to ask your browser to save it.</li><li>The app never stores your password itself. Your browser or password manager keeps it, so this works best in Chrome and Edge. Other browsers may offer to save it in their own way, or not at all.</li><li>You usually stay signed in on a device until you sign out, so you may not need your password often.</li><li>Do not tick it on a shared or public device.</li></ul>'],
 ['Deleting your account','<ul><li>Go to Settings > Delete Account and type DELETE to confirm. It cannot be undone.</li><li>Deleted: your sign-in, username, public profile, meetup seats, chat messages, game confirmations and badge progress.</li><li>Kept: meetups, listings and games you posted stay for the club but show as Deleted member, and only admins can edit or remove them.</li><li>You can make a new account later, but your badges and old posts will not come back.</li></ul>'],
 ['Looking for game listings','<ul><li>Open Meetups, tap + and choose Post a looking-for-game listing.</li><li>Say what format or points you want, how many opponents you need and your area.</li><li>Mention if painted armies are required and your availability.</li><li>Each listing has an Open and chat button so people can reply, ask questions and arrange a time. See Meetup and listing chat.</li><li>You see Edit and Delete buttons on your own listings. Use Edit to fix the format, opponents needed, area or details. Admins can edit and delete any listing.</li></ul>'],
-['Battle Record and badges','<p>The Record tab is for signed-in members. It starts with the Club Members list, then shows your badges, played meetups and the games the community has played. Tap + there to log a game: pick the members you played with and type the names of anyone not on the app. Tap Edit on your own games to fix them later.</p><p>Badges are earned two ways. Days logged in: Boarded (1 day), Regular (7), Crew Member (30) and Fleet Veteran (100). Matches recorded: Opening Salvo (1), Battle Tested (5), Campaign Hardened (10) and Grand Strategist (25). Each day you sign in counts once, however many times you open the app. Matches recorded counts games you log and played meetups you took part in once every registered player has confirmed them. Locked badges show your progress, such as 3 / 7. Your counts belong to your account, so they follow you to other devices.</p>'],
+['Battle Record and badges','<p>The Record tab is for signed-in members. It starts with the Club Members list, then shows your badges, played meetups and the games the community has played. Tap + there to log a game: choose the date played (today by default), pick the members you played with and type the names of anyone not on the app. Members you pick are asked to confirm before the game is added to their record. Tap Edit on your own games to fix them later, change the date or add more members; anyone newly added is asked to confirm too.</p><p>Badges are earned two ways. Days logged in: Boarded (1 day), Regular (7), Crew Member (30) and Fleet Veteran (100). Matches recorded: Opening Salvo (1), Battle Tested (5), Campaign Hardened (10) and Grand Strategist (25). Each day you sign in counts once, however many times you open the app. Matches recorded counts games you log, games others logged that you confirmed, and played meetups you took part in once every registered player has confirmed them. Locked badges show your progress, such as 3 / 7. Your counts belong to your account, so they follow you to other devices.</p>'],
 ['Club members and privacy','<ul><li>When you create an account a pop-up asks whether you want your account to be public on the club records. You can answer Yes, No or Ask me later.</li><li>Choose Yes and your username appears in the Club Members list at the top of the Record tab. Signed-in members can see that list. Tap View next to a member to see the games they have recorded: games they logged and played meetups that all players confirmed, and the badges they have earned (badges they have not earned yet are not shown).</li><li>Tap View on any played meetup, in a member list or in your own Played Meetups list, to see its full details, who played and, if the meetup still exists, its chat.</li><li>Choose No and you are not listed and have no member page. Games you log stay out of the News feed, and in games with other members (meetup player lists, played meetups and game logs) your name shows as Private member to everyone except you. Until you choose, you are treated as private.</li><li>Separately from your account setting, you can keep a single played meetup off your record by answering Correct, but do not record it for me when asked to confirm it. Your name then shows as Private player in that game.</li><li>Change your mind any time in Settings > Club Records. It takes effect straight away.</li><li>Your email is never shown. Looking-for-game listings still show your username, whether your account is public or private.</li><li>If you signed up before this feature existed you are asked once the next time you sign in.</li></ul>'],
 ['Settings and updates','<p>The Settings tab appears once you sign in. It holds your account and username, Club Records (public or private), Interface Opacity, Sound Effects, Help, What\'s New and Delete Account. What\'s New opens a pop-up with the app version, build date and time, and the list of updates.</p>'],
 ['Look and opacity','<p>The app uses a sci-fi cockpit look with a slowly scrolling starfield behind it. Once you sign in, open Settings and use the Interface Opacity slider (35% to 100%) to choose how see-through the panels are. Lower values show more stars; higher values are easier to read. Your choice is saved on this device. Animation is turned off if your device is set to reduce motion.</p>'],
 ['Reporting a meetup result','<ul><li>Only the host of a meetup (or an admin) can report it, and the Report game result button appears once the meetup start time has passed.</li><li>First choose whether the meetup happened. If you choose No and confirm, the meetup is deleted, together with its player list and chat. This cannot be undone.</li><li>If a game was played, enter the game, the system, the date and the result if you like, then tap Review players.</li><li>On the review screen you confirm who played. Players who joined the meetup are already listed, and you are listed too. Tap Remove to take anyone off, pick a member to add, or type a name for anyone not on the app and tap Add. At least two players are needed.</li><li>Tap Submit report. Each member listed gets a pop-up the next time they sign in asking them to confirm the game happened and the details are correct. They can answer Yes, Correct but do not record it for me, Not correct or Decide later. If they decide later, they can still answer from the Played Meetups list on the Record tab.</li><li>The game is posted on every player\'s record only after all the registered players have confirmed it. Until then it shows how many have confirmed, such as 1 of 3, and only the players, the reporter and admins can see it. People not on the app need no confirmation.</li><li>If any player answers Not correct the game shows as Disputed and is never posted. The reporter or an admin can delete it and report it again.</li><li>Correct, but do not record it for me counts as a confirmation, so the game can still be posted for everyone else, but it is left off your own record: it does not count toward your Matches Recorded or badges and is not on your member page. Everyone else sees your name as Private player in that game\'s player list. You still see your own name, with a note. You cannot change this answer afterwards.</li><li>Once posted, the game counts toward each player\'s Matches Recorded and badges, appears in News and shows on public member pages.</li><li>When a game is posted its meetup leaves the Meetups list, so it cannot be reported again. If a night had more than one game, put them all in one report. Open the posted game any time with View in Played Meetups or on the member pages of the players. The meetup chat opens with it.</li></ul>'],
+['Games you are added to','<ul><li>When someone logs a game, or edits one, and adds you as a player, you get a pop-up the next time you sign in. You can also answer from Recent Community Games on the Record tab.</li><li>Yes, this is correct adds the game to your record: it counts toward your Matches Recorded and badges and shows on your member page.</li><li>Correct, but do not record it for me confirms the game but keeps it off your record. Everyone else sees your name as Private player in that game.</li><li>Not correct means you are not added to the game. It never appears on your record and your name is removed from it. The person who logged it can see that you declined and can ask again by adding you in a later edit.</li><li>Until you answer you show as pending in the game and it is not on your record.</li><li>Decide later closes the pop-up and asks again next time you sign in.</li><li>Games that were logged before this feature keep any member names as plain text with no confirmation.</li></ul>'],
 ['Sound effects','<p>Buttons play short synthesized tones: a click for buttons, a rising blip for tabs, a chime for success, a low buzz for warnings and a falling tone for deletes. Open Settings > Sound Effects to turn them on or off. The choice is saved on this device. Your browser only allows sound after you tap something, so the first tap may be silent on some phones.</p>'],
 ['Editing and deleting your posts','<p>Posts made after version 2.9.0 belong to your account. Only you (and admins) see Edit and Delete on them. Older posts have no owner recorded until the club admin runs the ownership step in the database, so they stay admin-only until then. If a post was saved on your device only, edits also stay on your device.</p>'],
 ['Offline mode','<p>When you are online and signed in with an account, meetups, listings and game logs are saved to the club database and everyone sees them. If the database cannot be reached, or a save fails, the app keeps the post on your device only and tells you.</p>'],
@@ -498,7 +501,7 @@ function fabAction(){
  const t=$('fab').dataset.tab;
  resetForms();
  if(t==='meetups')openSheet('sh-choose');
- else{fillLogPicker([]);openSheet('sh-log')}
+ else{fillLogPicker([],[]);openSheet('sh-log')}
 }
 function openSheet(id){$(id).classList.add('on')}
 function closeSheet(id){$(id).classList.remove('on')}
@@ -619,7 +622,12 @@ async function syncFromServer(){
  if(!online||!sb)return;
  const okM=await pull('meetups','avtc_meetups','date',true,v=>{meetups=v});
  await pull('lfg_listings','avtc_lfg','created_at',false,v=>{lfg=v});
- await pull('game_logs','avtc_logs','created_at',false,v=>{logs=v});
+ const okG=await pull('game_logs','avtc_logs','created_at',false,v=>{logs=v});
+ if(okG){
+  const{data:lp,error:le}=await sb.from('log_players').select('*');
+  logs.forEach(g=>{g.log_players=le?[]:(lp||[]).filter(x=>x.log_id===g.id).map(x=>({id:x.user_id,name:x.username,status:x.status,hidden:x.hidden===true}))});
+  store('avtc_logs',JSON.stringify(logs));
+ }
  const okP=await pull('played_meetups','avtc_played','created_at',false,v=>{played=v});
  if(okP){
   const{data:pp,error:pe2}=await sb.from('played_players').select('*');
@@ -635,7 +643,11 @@ async function syncFromServer(){
  loadAllData();
  setTimeout(checkPrompts,500);
 }
-function logDate(d){return /^\d{4}-/.test(d||'')?new Date(d).toLocaleDateString('en-US',{dateStyle:'medium'}):(d||'')}
+function logDate(d){
+ if(/^\d{4}-\d{2}-\d{2}$/.test(d||''))return new Date(d+'T00:00').toLocaleDateString('en-US',{dateStyle:'medium'});
+ return /^\d{4}-/.test(d||'')?new Date(d).toLocaleDateString('en-US',{dateStyle:'medium'}):(d||'');
+}
+const toDay=d=>/^\d{4}-\d{2}-\d{2}$/.test(d||'')?d:/^\d{4}-/.test(d||'')?new Date(Date.parse(d)-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10):localToday();
 
 function timeAgo(t){
  if(!t)return '';
@@ -826,25 +838,61 @@ function renderLfg(){
   <div class="meta"><span>📍 ${esc(l.location)}</span><span>By ${esc(shownAuthor(l.author))}</span>${canEdit(l)?`<span class="row"><button class="jn g" onclick="editLfg('${esc(l.id)}')">Edit</button><button class="del" onclick="deleteLfg('${esc(l.id)}')">Delete</button></span>`:''}</div></div>`}).join(''):'<div class="empty">No listings for this system right now.</div>';
 }
 
-function logNames(){
- const seen=new Set(),out=[];
- const add=n=>{n=String(n).trim().slice(0,30);const k=n.toLowerCase();if(n&&!seen.has(k)){seen.add(k);out.push(n)}};
- document.querySelectorAll('#lg-list input:checked').forEach(i=>add(i.value));
- $('lg-guests').value.split(/[,\n]/).forEach(add);
- return out;
+function logPeople(){
+ const seen=new Set(),guests=[];
+ const pick=[...document.querySelectorAll('#lg-list input:checked')].map(i=>({id:i.value,name:i.dataset.name}));
+ $('lg-guests').value.split(/[,\n]/).forEach(n=>{n=n.trim().slice(0,30);const k=n.toLowerCase();if(n&&!seen.has(k)){seen.add(k);guests.push(n)}});
+ return{pick,guests};
 }
 function filterLog(){
  const q=$('lg-filter').value.trim().toLowerCase();
  document.querySelectorAll('#lg-list .pk').forEach(l=>l.classList.toggle('hid',!!q&&!l.dataset.n.includes(q)));
 }
-async function fillLogPicker(names){
+async function fillLogPicker(sel,guests){
  await loadMembers();
- const me=displayName().toLowerCase(),low=names.map(n=>n.toLowerCase());
- const list=members.filter(x=>String(x.name).toLowerCase()!==me);
- const have=list.map(x=>String(x.name).toLowerCase());
+ const me=displayName().toLowerCase();
+ const list=members.filter(x=>x.id!==(user&&user.id)&&String(x.name).toLowerCase()!==me);
  $('lg-filter').value='';
- $('lg-list').innerHTML=list.length?list.map(x=>`<label class="pk" data-n="${esc(String(x.name).toLowerCase())}"><input type="checkbox" value="${esc(x.name)}" ${low.includes(String(x.name).toLowerCase())?'checked':''}> ${esc(x.name)}</label>`).join(''):'<p style="color:var(--mu);font-size:14px;margin:6px 0">No other members found. Type names below instead.</p>';
- $('lg-guests').value=names.filter(n=>!have.includes(n.toLowerCase())).join(', ');
+ $('lg-list').innerHTML=list.length?list.map(x=>`<label class="pk" data-n="${esc(String(x.name).toLowerCase())}"><input type="checkbox" value="${esc(x.id)}" data-name="${esc(x.name)}" ${sel.includes(x.id)?'checked':''}> ${esc(x.name)}</label>`).join(''):'<p style="color:var(--mu);font-size:14px;margin:6px 0">No other members found. Type names below instead.</p>';
+ $('lg-guests').value=guests.join(', ');
+}
+function logWith(g){
+ const a=(g.log_players||[]).filter(p=>p.status!=='declined'||canEdit(g)).map(p=>esc(p.hidden?(user&&p.id===user.id?String(p.name)+' (not on your record)':'Private player'):pname(p.id,p.name))+' '+(pIcon[p.status]||''));
+ const b=(g.played_with||[]).map(n=>esc(pname(null,n)));
+ return a.concat(b).join(', ');
+}
+function logDetail(g){
+ const s=sys(g.system);
+ return `<div class="card" style="gap:6px"><span class="badge">${s.icon} ${s.name}</span><h3>${esc(g.game)}</h3><p>📅 ${esc(logDate(g.date))}</p><p>Result: ${esc(g.score)}</p>${g.notes?`<p><i>"${esc(g.notes)}"</i></p>`:''}<p>👥 ${esc(g.players)} players: ${logWith(g)||'-'}</p><small style="color:var(--mu)">Logged by ${esc(pname(g.author_id,g.author))}</small></div>`;
+}
+async function syncLogPlayers(id,pick,old){
+ const keep=old.filter(p=>pick.some(x=>x.id===p.id)&&p.status!=='declined');
+ const drop=old.filter(p=>!keep.some(k=>k.id===p.id));
+ const add=pick.filter(x=>!keep.some(k=>k.id===x.id));
+ if(drop.length){
+  const{error}=await sb.from('log_players').delete().eq('log_id',id).in('user_id',drop.map(p=>p.id));
+  if(error)return{err:error.message,list:old};
+ }
+ if(add.length){
+  const{error}=await sb.from('log_players').insert(add.map(x=>({log_id:id,user_id:x.id,username:x.name,status:'pending'})));
+  if(error)return{err:error.message,list:keep};
+ }
+ return{err:'',list:keep.concat(add.map(x=>({id:x.id,name:x.name,status:'pending'})))};
+}
+const logErr=m=>/log_players|schema cache|does not exist/i.test(m)?'the club database needs an update':m;
+async function respondLog(id,status,hide){
+ const g=logs.find(x=>x.id===id);
+ const me=g&&user&&(g.log_players||[]).find(p=>p.id===user.id);
+ if(!me)return;
+ if(online&&sb&&!isLocal()){
+  const{data,error}=await sb.from('log_players').update(hide?{status,hidden:true}:{status}).eq('log_id',id).eq('user_id',user.id).select('log_id');
+  if(error){toast('Could not save: '+logErr(error.message));return}
+  if(!(data&&data.length)){toast('Could not save: not allowed');return}
+ }
+ me.status=status;if(hide)me.hidden=true;
+ store('avtc_logs',JSON.stringify(logs));
+ renderGameLogs();renderUserStats();renderClub();
+ toast(hide?'Thanks, confirmed and kept off your record':status==='confirmed'?'Thanks, game confirmed and added to your record':'Declined. You were not added to this game.');
 }
 async function editLog(id){
  const g=logs.find(x=>x.id===id);
@@ -853,43 +901,55 @@ async function editLog(id){
  $('log-h').textContent='Edit Game';$('log-btn').textContent='Save Changes';
  $('log-system').value=sid(g.system);$('log-game-title').value=g.game||'';$('log-game-score').value=g.score||'';
  $('log-game-players').value=g.players||2;$('log-game-notes').value=g.notes||'';
- await fillLogPicker(g.played_with||[]);
+ $('log-game-date').value=toDay(g.date);
+ await fillLogPicker((g.log_players||[]).filter(p=>p.status!=='declined').map(p=>p.id),g.played_with||[]);
  openSheet('sh-log');
 }
 async function handleLogGameSubmit(e){
  e.preventDefault();
  if(needName())return;
- const names=logNames();
- if(names.length>10){toast('Only 10 other players allowed');return}
- const f={system:$('log-system').value,game:$('log-game-title').value,score:$('log-game-score').value,players:Math.max(parseInt($('log-game-players').value)||1,names.length+1),notes:$('log-game-notes').value,played_with:names};
+ const pp=logPeople();
+ if(pp.pick.length+pp.guests.length>10){toast('Only 10 other players allowed');return}
+ const date=$('log-game-date').value||localToday();
+ if(date>localToday()){toast('The date cannot be in the future');return}
+ const f={system:$('log-system').value,game:$('log-game-title').value,score:$('log-game-score').value,date,players:Math.max(parseInt($('log-game-players').value)||1,pp.pick.length+pp.guests.length+1),notes:$('log-game-notes').value,played_with:pp.guests};
  if(editLogId){
   const o=logs.find(x=>x.id===editLogId);
   if(!o||!canEdit(o)){toast('You can only edit your own games');return}
   let er=await saveEdit('game_logs',editLogId,f);
   if(er&&er!=='#local'&&/played_with/i.test(er)){const{played_with,...r}=f;er=await saveEdit('game_logs',editLogId,r)}
   if(er&&er!=='#local'){toast('Could not save: '+er);return}
+  let perr='';
+  if(!er&&online&&sb&&!isLocal()){const r=await syncLogPlayers(editLogId,pp.pick,o.log_players||[]);o.log_players=r.list;perr=r.err}
   Object.assign(o,f);store('avtc_logs',JSON.stringify(logs));
-  closeSheet('sh-log');resetForms();renderGameLogs();toast(er?'Updated on this device only':'Game updated');return;
+  closeSheet('sh-log');resetForms();renderGameLogs();renderUserStats();
+  const waiting=(o.log_players||[]).some(p=>p.status==='pending');
+  toast(perr?'Game updated, but members could not be asked to confirm: '+logErr(perr):er?'Updated on this device only':waiting?'Game updated. Added members will be asked to confirm.':'Game updated');return;
  }
- const g=Object.assign({id:Date.now().toString(),created_at:new Date().toISOString(),author_id:user.id,author:displayName(),date:new Date().toISOString()},f);
+ const g=Object.assign({id:Date.now().toString(),created_at:new Date().toISOString(),author_id:user.id,author:displayName()},f);
  const row=(({author_id,...r})=>r)(g);
  let dbErr=await saveRemote('game_logs',row);
  if(dbErr&&/played_with/i.test(dbErr)){const{played_with,...r}=row;dbErr=await saveRemote('game_logs',r)}
+ let perr='';g.log_players=[];
+ if(!dbErr&&online&&sb&&!isLocal()&&pp.pick.length){const r=await syncLogPlayers(g.id,pp.pick,[]);g.log_players=r.list;perr=r.err}
  logs.unshift(g);store('avtc_logs',JSON.stringify(logs));
  closeSheet('sh-log');resetForms();
- renderGameLogs();renderUserStats();toast(dbErr?'Saved on this device only: '+dbErr:'Game logged!');
+ renderGameLogs();renderUserStats();
+ toast(dbErr?'Saved on this device only: '+dbErr:perr?'Game logged, but members could not be asked to confirm: '+logErr(perr):g.log_players.length?'Game logged. Members will be asked to confirm.':'Game logged!');
 }
 function renderGameLogs(){
  const saved=read('avtc_logs');if(saved){try{logs=JSON.parse(saved)}catch(x){}}
  renderClub();
  $('game-logs-list').innerHTML=logs.length?logs.map(g=>{
-  const s=sys(g.system);
-  return `<div class="log"><div><b>${s.icon} ${esc(g.game)}</b><br><small>Result: ${esc(g.score)}</small>${(g.played_with&&g.played_with.length)?`<br><small>With: ${esc(g.played_with.map(n=>pname(null,n)).join(', '))}</small>`:''}${g.notes?`<br><small><i>"${esc(g.notes)}"</i></small>`:''}</div>
-  <div style="text-align:right"><small>${esc(g.players)} players<br>${esc(pname(g.author_id,g.author))} • ${esc(logDate(g.date))}</small>${canEdit(g)?`<br><button class="jn g" style="margin-top:6px" onclick="editLog('${esc(g.id)}')">Edit</button>`:''}</div></div>`}).join(''):'<div class="empty">No games logged yet.</div>';
+  const s=sys(g.system),w=logWith(g),gid=esc(g.id);
+  const me=user&&(g.log_players||[]).find(p=>p.id===user.id&&p.status==='pending');
+  const ask=me?`<div class="row" style="margin-top:8px"><button class="jn" onclick="respondLog('${gid}','confirmed')">Confirm</button><button class="jn g" onclick="respondLog('${gid}','confirmed',true)">Correct, keep off my record</button><button class="jn g" onclick="respondLog('${gid}','declined')">Not correct</button></div>`:'';
+  return `<div class="log"><div><b>${s.icon} ${esc(g.game)}</b><br><small>Result: ${esc(g.score)}</small>${w?`<br><small>With: ${w}</small>`:''}${g.notes?`<br><small><i>"${esc(g.notes)}"</i></small>`:''}${ask}</div>
+  <div style="text-align:right"><small>${esc(g.players)} players<br>${esc(pname(g.author_id,g.author))} • ${esc(logDate(g.date))}</small>${canEdit(g)?`<br><button class="jn g" style="margin-top:6px" onclick="editLog('${gid}')">Edit</button>`:''}</div></div>`}).join(''):'<div class="empty">No games logged yet.</div>';
 }
 function matchCount(){
  if(!user)return 0;
- return logs.filter(g=>g.author_id&&g.author_id===user.id).length+played.filter(g=>posted(g)&&(g.players||[]).some(p=>p.id===user.id&&!p.hidden)).length;
+ return logs.filter(g=>(g.author_id&&g.author_id===user.id)||inLog(g,user.id)).length+played.filter(g=>posted(g)&&(g.players||[]).some(p=>p.id===user.id&&!p.hidden)).length;
 }
 function localToday(){return new Date(Date.now()-new Date().getTimezoneOffset()*6e4).toISOString().slice(0,10)}
 async function recordLogin(){
@@ -1080,6 +1140,7 @@ function playedInfo(g){
  return{cls:'amber',label:'⏳ '+c+' of '+pl.length+' confirmed',state:'pending'};
 }
 const posted=g=>playedInfo(g).state==='confirmed';
+const inLog=(g,uid)=>(g.log_players||[]).some(p=>p.id===uid&&p.status==='confirmed'&&!p.hidden);
 const doneM=m=>played.some(g=>g.meetup_id===m.id&&posted(g));
 const mineP=g=>!!user&&(isAdmin(user)||g.created_by===user.id||(g.players||[]).some(p=>p.id===user.id));
 const seeP=g=>posted(g)||mineP(g);
@@ -1235,25 +1296,30 @@ async function deletePlayed(id){
 }
 function checkPending(){
  if(!user||document.querySelector('.ov.on'))return;
- pendQ=played.filter(g=>!asked.has(g.id)&&(g.players||[]).some(p=>p.id===user.id&&p.status==='pending')).map(g=>g.id);
+ const p=played.filter(g=>!asked.has('p'+g.id)&&(g.players||[]).some(x=>x.id===user.id&&x.status==='pending')).map(g=>({k:'p',id:g.id}));
+ const l=logs.filter(g=>!asked.has('l'+g.id)&&(g.log_players||[]).some(x=>x.id===user.id&&x.status==='pending')).map(g=>({k:'l',id:g.id}));
+ pendQ=p.concat(l);
  if(pendQ.length)showConfirm();
 }
 function showConfirm(){
- const g=played.find(x=>x.id===pendQ[0]);
- if(!g){closeSheet('sh-confirm');return}
- pendCur=g.id;
- $('cf-count').textContent=pendQ.length>1?pendQ.length+' games are waiting for your answer.':'Please check the details below. It is posted on every player\'s record once all members confirm.';
- $('cf-body').innerHTML=playedDetail(g);
+ const it=pendQ[0];
+ const g=it&&(it.k==='l'?logs:played).find(x=>x.id===it.id);
+ if(!g){pendQ.shift();if(pendQ.length)showConfirm();else closeSheet('sh-confirm');return}
+ pendCur=it;
+ $('cf-count').textContent=pendQ.length>1?pendQ.length+' games are waiting for your answer.':it.k==='l'?'You were added to a logged game. Please check the details below. It is added to your record only if you confirm.':'Please check the details below. It is posted on the record of every player once all members confirm.';
+ $('cf-body').innerHTML=it.k==='l'?logDetail(g):playedDetail(g);
  openSheet('sh-confirm');
 }
 async function answerConfirm(st){
- const id=pendCur;
- pendQ.shift();asked.add(id);
- await respondPlayed(id,st==='hidden'?'confirmed':st,st==='hidden');
+ const it=pendCur;
+ if(!it)return;
+ pendQ.shift();asked.add(it.k+it.id);
+ const hide=st==='hidden',s2=hide?'confirmed':st;
+ if(it.k==='l')await respondLog(it.id,s2,hide);else await respondPlayed(it.id,s2,hide);
  if(pendQ.length)showConfirm();else closeSheet('sh-confirm');
 }
 function dismissConfirm(){
- pendQ.forEach(i=>asked.add(i));pendQ=[];
+ pendQ.forEach(i=>asked.add(i.k+i.id));pendQ=[];
  closeSheet('sh-confirm');
 }
 function isPrivate(id,name){
@@ -1284,7 +1350,7 @@ async function loadClub(){
 function memberGames(m){
  const nm=String(m.name).toLowerCase();
  return{
-  logs:logs.filter(g=>(g.author_id&&g.author_id===m.id)||(!g.author_id&&String(g.author||'').toLowerCase()===nm)),
+  logs:logs.filter(g=>(g.author_id&&g.author_id===m.id)||(!g.author_id&&String(g.author||'').toLowerCase()===nm)||inLog(g,m.id)),
   played:played.filter(g=>posted(g)&&(g.players||[]).some(p=>p.id===m.id&&!p.hidden))
  };
 }
@@ -1300,7 +1366,7 @@ async function openMember(id){
  const g=memberGames(m);
  const rows=g.logs.map(x=>{
   const s=sys(x.system);
-  return{t:Date.parse(x.created_at)||0,h:`<div class="log"><div><b>${s.icon} ${esc(x.game)}</b><br><small>Result: ${esc(x.score)}</small>${(x.played_with&&x.played_with.length)?`<br><small>With: ${esc(x.played_with.map(n=>pname(null,n)).join(', '))}</small>`:''}${x.notes?`<br><small><i>"${esc(x.notes)}"</i></small>`:''}</div><div style="text-align:right"><small>${esc(x.players)} players<br>${esc(logDate(x.date))}</small></div></div>`};
+  return{t:Date.parse(x.created_at)||0,h:`<div class="log"><div><b>${s.icon} ${esc(x.game)}</b><br><small>Result: ${esc(x.score)}</small>${logWith(x)?`<br><small>With: ${logWith(x)}</small>`:''}${x.notes?`<br><small><i>"${esc(x.notes)}"</i></small>`:''}</div><div style="text-align:right"><small>${esc(x.players)} players<br>${esc(logDate(x.date))}</small></div></div>`};
  }).concat(g.played.map(x=>{
   const s=sys(x.system),i=playedInfo(x);
   return{t:Date.parse(x.created_at)||0,h:`<div class="log"><div><b>${s.icon} ${esc(x.game)}</b><br><small>${esc(x.title||'Meetup')}${x.result?' • '+esc(x.result):''}</small><br><span class="st ${i.cls}">${i.label}</span></div><div style="text-align:right"><small>${esc(pDate(x.played_at))}</small><br><button class="jn g" style="margin-top:6px" onclick="openPlayedGame('${esc(x.id)}')">View</button></div></div>`};
@@ -1502,6 +1568,7 @@ function resetForms(){
  editLogId=null;
  $('log-h').textContent='Log a Game';$('log-btn').textContent='Save Game';
  $('sh-log').querySelector('form').reset();
+ $('log-game-date').max=localToday();$('log-game-date').value=localToday();
 }
 function editMeetup(id){
  const m=meetups.find(x=>x.id===id);
