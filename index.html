@@ -1,0 +1,1007 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antelope Valley Tabletop Club (AVTC) - Lancaster, CA</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkbg: '#0f172a',
+                        cardbg: '#1e293b',
+                        accent: '#6366f1',
+                        accenthover: '#4f46e5'
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body class="bg-darkbg text-slate-100 min-h-screen font-sans selection:bg-accent selection:text-white flex flex-col">
+
+    <header class="sticky top-0 z-50 bg-cardbg/90 backdrop-blur border-b border-slate-800 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex items-center space-x-3">
+                    <div class="bg-accent text-white p-2.5 rounded-xl shadow-md flex items-center justify-center">
+                        <i class="fa-solid fa-dice-d20 text-xl animate-pulse"></i>
+                    </div>
+                    <div>
+                        <span class="font-extrabold text-lg tracking-wider text-white">AVTC</span>
+                        <p class="text-xs text-slate-400 hidden sm:block">Lancaster, CA Tabletop Club</p>
+                    </div>
+                </div>
+
+                <!-- Desktop Nav Tabs -->
+                <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                    <button onclick="switchTab('home')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800" data-tab="home"><i class="fa-solid fa-house mr-1.5"></i>Home</button>
+                    <button onclick="switchTab('meetups')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800" data-tab="meetups"><i class="fa-solid fa-calendar-days mr-1.5"></i>Meetups</button>
+                    <button onclick="switchTab('lfg')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800" data-tab="lfg"><i class="fa-solid fa-users mr-1.5"></i>LFG Board</button>
+                    <button onclick="switchTab('stats')" class="nav-btn px-3.5 py-2 rounded-lg text-sm font-medium transition-all text-slate-300 hover:text-white hover:bg-slate-800" data-tab="stats"><i class="fa-solid fa-trophy mr-1.5"></i>Stats & Achievements</button>
+                </nav>
+
+                <!-- User Session & Community Links -->
+                <div class="flex items-center space-x-3">
+                    <a href="https://www.facebook.com/groups/1800950113762513/" target="_blank" title="Facebook Group" class="text-slate-400 hover:text-blue-400 p-2 transition"><i class="fa-brands fa-facebook text-xl"></i></a>
+                    <a href="https://discord.gg/pBcqsPMYbk" target="_blank" title="Discord Server" class="text-slate-400 hover:text-indigo-400 p-2 transition"><i class="fa-brands fa-discord text-xl"></i></a>
+                    
+                    <div id="auth-container">
+                        <button onclick="openAuthModal('login')" class="bg-accent hover:bg-accenthover text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-md shadow-accent/20">
+                            <i class="fa-solid fa-right-to-bracket mr-1.5"></i>Sign In
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Subnav Bar -->
+        <div class="md:hidden flex justify-around bg-slate-900 border-t border-slate-800 py-2.5 px-2">
+            <button onclick="switchTab('home')" class="mob-btn text-xs font-medium text-slate-300 flex flex-col items-center" data-tab="home"><i class="fa-solid fa-house text-base mb-0.5"></i>Home</button>
+            <button onclick="switchTab('meetups')" class="mob-btn text-xs font-medium text-slate-300 flex flex-col items-center" data-tab="meetups"><i class="fa-solid fa-calendar-days text-base mb-0.5"></i>Meetups</button>
+            <button onclick="switchTab('lfg')" class="mob-btn text-xs font-medium text-slate-300 flex flex-col items-center" data-tab="lfg"><i class="fa-solid fa-users text-base mb-0.5"></i>LFG</button>
+            <button onclick="switchTab('stats')" class="mob-btn text-xs font-medium text-slate-300 flex flex-col items-center" data-tab="stats"><i class="fa-solid fa-trophy text-base mb-0.5"></i>Stats</button>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Connection Status Notification Banner -->
+        <div id="db-status-banner" class="mb-6 p-4 rounded-xl bg-slate-800/80 border border-slate-700/60 flex items-center justify-between text-sm shadow-md">
+            <div class="flex items-center space-x-3">
+                <span id="status-dot" class="h-3 w-3 rounded-full bg-amber-400 animate-pulse"></span>
+                <div>
+                    <span id="status-text" class="font-semibold text-slate-200">Connecting to Supabase...</span>
+                    <p class="text-xs text-slate-400" id="status-sub">Checking real-time database connection for Lancaster AVTC.</p>
+                </div>
+            </div>
+            <button onclick="testConnection()" class="text-xs bg-slate-700 hover:bg-slate-600 px-3 py-1.5 rounded-lg text-slate-200 transition font-medium">Retry / Check</button>
+        </div>
+
+        <!-- 1. HOME TAB -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <div class="relative overflow-hidden bg-gradient-to-br from-indigo-950 via-slate-900 to-slate-900 rounded-3xl p-8 sm:p-12 border border-slate-800 shadow-2xl">
+                <div class="relative z-10 max-w-3xl">
+                    <span class="inline-block bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 text-xs px-3 py-1 rounded-full font-semibold mb-4 tracking-wide uppercase">Lancaster & Palmdale Board Gamers</span>
+                    <h1 class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white mb-6">Antelope Valley Tabletop Club</h1>
+                    <p class="text-lg text-slate-300 mb-8 leading-relaxed">
+                        Welcome to AVTC! We are the premier tabletop gaming community in Lancaster, California (LA County). Whether you love epic strategy board games, cooperative dungeon crawlers, trading card games, or miniature wargames, find your next play group right here in the desert!
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="switchTab('meetups')" class="bg-accent hover:bg-accenthover text-white font-semibold px-6 py-3 rounded-xl transition shadow-lg shadow-accent/25 flex items-center">
+                            <i class="fa-solid fa-calendar-check mr-2"></i>View Upcoming Meetups
+                        </button>
+                        <button onclick="switchTab('lfg')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold px-6 py-3 rounded-xl border border-slate-700 transition flex items-center">
+                            <i class="fa-solid fa-users-rays mr-2"></i>Browse LFG Board
+                        </button>
+                    </div>
+                </div>
+                <div class="absolute right-0 bottom-0 opacity-10 translate-x-12 translate-y-12 pointer-events-none hidden lg:block">
+                    <i class="fa-solid fa-chess-rook text-[280px] text-white"></i>
+                </div>
+            </div>
+
+            <!-- Quick Highlights Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                    <div class="w-12 h-12 bg-blue-500/10 text-blue-400 rounded-xl flex items-center justify-center text-xl mb-4 font-bold"><i class="fa-solid fa-location-dot"></i></div>
+                    <h3 class="text-lg font-bold text-white mb-2">Local Lancaster Meetups</h3>
+                    <p class="text-sm text-slate-400">Regular board game nights and weekend campaigns hosted locally across Lancaster and the Antelope Valley.</p>
+                </div>
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                    <div class="w-12 h-12 bg-emerald-500/10 text-emerald-400 rounded-xl flex items-center justify-center text-xl mb-4 font-bold"><i class="fa-solid fa-dice"></i></div>
+                    <h3 class="text-lg font-bold text-white mb-2">Find Your Group (LFG)</h3>
+                    <p class="text-sm text-slate-400">Looking for players for D&D, Twilight Imperium, or Catan? Post your game listing and connect instantly with local players.</p>
+                </div>
+                <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                    <div class="w-12 h-12 bg-amber-500/10 text-amber-400 rounded-xl flex items-center justify-center text-xl mb-4 font-bold"><i class="fa-solid fa-medal"></i></div>
+                    <h3 class="text-lg font-bold text-white mb-2">Stats & Club Badges</h3>
+                    <p class="text-sm text-slate-400">Log your plays to level up your player profile, collect club achievements, and climb the Lancaster leaderboard.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. MEETUPS TAB -->
+        <section id="tab-meetups" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                <div>
+                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-calendar-days text-accent mr-2.5"></i>Club Meetup Events</h2>
+                    <p class="text-sm text-slate-400">Join our upcoming game sessions in Lancaster, CA. Logged-in members can also organize and post new meetups.</p>
+                </div>
+                <button id="btn-create-meetup" onclick="openMeetupModal()" class="bg-accent hover:bg-accenthover text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-md hidden">
+                    <i class="fa-solid fa-plus mr-1.5"></i>Host Meetup
+                </button>
+            </div>
+
+            <!-- Meetups Grid -->
+            <div id="meetups-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamic Meetup Cards injected here -->
+            </div>
+        </section>
+
+        <!-- 3. LFG BOARD TAB -->
+        <section id="tab-lfg" class="tab-content hidden space-y-6">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                <div>
+                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-users text-accent mr-2.5"></i>Looking For Group (LFG) Board</h2>
+                    <p class="text-sm text-slate-400">Browse games looking for players or post your own table opening in the Antelope Valley area.</p>
+                </div>
+                <button id="btn-create-lfg" onclick="openLfgModal()" class="bg-accent hover:bg-accenthover text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition shadow-md hidden">
+                    <i class="fa-solid fa-circle-plus mr-1.5"></i>Post LFG Listing
+                </button>
+            </div>
+
+            <!-- LFG Listings Container -->
+            <div id="lfg-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamic LFG Cards injected here -->
+            </div>
+        </section>
+
+        <!-- 4. STATS & ACHIEVEMENTS TAB -->
+        <section id="tab-stats" class="tab-content hidden space-y-8">
+            <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+                <div>
+                    <h2 class="text-2xl font-bold text-white"><i class="fa-solid fa-trophy text-amber-400 mr-2.5"></i>Club Stats & Achievements</h2>
+                    <p class="text-sm text-slate-400">Log board games you've played to earn club badge unlocks and view community statistics.</p>
+                </div>
+                <div id="stats-action-container">
+                    <button onclick="openLogGameModal()" id="btn-log-game" class="bg-accent hover:bg-accenthover text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition shadow-md hidden">
+                        <i class="fa-solid fa-dice-one mr-2"></i>Log Played Game
+                    </button>
+                </div>
+            </div>
+
+            <!-- Profile Badges & Stats Overview -->
+            <div id="user-profile-stats" class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg hidden">
+                <h3 class="text-lg font-bold text-white mb-4 flex items-center"><i class="fa-solid fa-id-badge text-indigo-400 mr-2"></i>Your Player Profile & Unlocks</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block mb-1">Total Games Logged</span>
+                        <span id="stat-total-games" class="text-2xl font-black text-white">0</span>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block mb-1">Achievements Unlocked</span>
+                        <span id="stat-total-badges" class="text-2xl font-black text-amber-400">0 / 5</span>
+                    </div>
+                    <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800">
+                        <span class="text-xs text-slate-400 block mb-1">Member Status</span>
+                        <span class="text-sm font-bold text-emerald-400 flex items-center mt-1"><i class="fa-solid fa-circle-check mr-1.5 text-xs"></i>AVTC Verified Player</span>
+                    </div>
+                </div>
+
+                <h4 class="text-sm font-bold text-slate-300 uppercase tracking-wider mb-3">Club Achievement Badges</h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4" id="badges-grid">
+                    <!-- Badges injected here -->
+                </div>
+            </div>
+
+            <!-- Community Logged Plays Feed -->
+            <div class="bg-cardbg p-6 rounded-2xl border border-slate-800 shadow-lg">
+                <h3 class="text-lg font-bold text-white mb-4"><i class="fa-solid fa-clock-rotate-left text-slate-400 mr-2"></i>Recent Community Game Logs</h3>
+                <div id="game-logs-list" class="space-y-3">
+                    <!-- Logs injected here -->
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- Auth Modal -->
+    <div id="modal-auth" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-slate-800 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeAuthModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <div class="text-center mb-6">
+                <div class="bg-accent/10 text-accent w-12 h-12 rounded-2xl mx-auto flex items-center justify-center text-xl mb-3"><i class="fa-solid fa-user-lock"></i></div>
+                <h3 id="auth-title" class="text-2xl font-bold text-white">Sign In to AVTC</h3>
+                <p class="text-xs text-slate-400 mt-1">Access member meetups, LFG posting, and club game stats.</p>
+            </div>
+            
+            <form id="auth-form" onsubmit="handleAuthSubmit(event)" class="space-y-4">
+                <div>
+                    <div class="flex justify-between items-center mb-1.5">
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider">Email Address</label>
+                        <button type="button" onclick="handleForgotEmail()" class="text-xs text-accent hover:underline">Forgot Email?</button>
+                    </div>
+                    <input type="email" id="auth-email" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-accent" placeholder="gamer@example.com">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="auth-password" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-accent" placeholder="••••••••">
+                </div>
+                <div class="flex items-center space-x-2 pt-1">
+                    <input type="checkbox" id="remember-login" class="w-4 h-4 rounded bg-slate-900 border-slate-800 text-accent focus:ring-accent accent-accent">
+                    <label for="remember-login" class="text-xs text-slate-300 select-none cursor-pointer">Remember login info</label>
+                </div>
+                <div id="auth-error" class="text-rose-400 text-xs hidden bg-rose-500/10 p-3 rounded-xl border border-rose-500/20"></div>
+                <button type="submit" id="auth-submit-btn" class="w-full bg-accent hover:bg-accenthover text-white font-semibold py-3 rounded-xl transition shadow-lg shadow-accent/20">Sign In</button>
+            </form>
+
+            <div class="mt-6 text-center text-xs text-slate-400">
+                <span id="auth-switch-text">Don't have an account?</span>
+                <button onclick="toggleAuthMode()" id="auth-switch-btn" class="text-accent font-semibold ml-1 hover:underline">Create Account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meetup Creation Modal -->
+    <div id="modal-meetup" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-slate-800 w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeMeetupModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-calendar-plus text-accent mr-2"></i>Host a Club Meetup</h3>
+            <form onsubmit="handleCreateMeetup(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Event Title</label>
+                    <input type="text" id="meetup-title" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., Saturday Catan & Wings Night">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Date & Time</label>
+                        <input type="datetime-local" id="meetup-date" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Location / Venue</label>
+                        <input type="text" id="meetup-location" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., Lancaster Library / Round Table">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Description & Featured Games</label>
+                    <textarea id="meetup-desc" rows="3" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="Briefly describe what games will be played or what players should bring..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-accent hover:bg-accenthover text-white font-semibold py-3 rounded-xl transition shadow-lg">Publish Meetup</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- LFG Creation Modal -->
+    <div id="modal-lfg" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-slate-800 w-full max-w-lg rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeLfgModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-users-rays text-accent mr-2"></i>Post LFG Listing</h3>
+            <form onsubmit="handleCreateLfg(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Game Title</label>
+                    <input type="text" id="lfg-game" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., Dungeons & Dragons 5e / Scythe">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Players Needed</label>
+                        <input type="text" id="lfg-players" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., Need 2 more players">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Meeting Area</label>
+                        <input type="text" id="lfg-location" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., East Lancaster / Quartz Hill">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Details & Schedule</label>
+                    <textarea id="lfg-desc" rows="3" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="Share schedule preference, campaign style, or experience level required..."></textarea>
+                </div>
+                <button type="submit" class="w-full bg-accent hover:bg-accenthover text-white font-semibold py-3 rounded-xl transition shadow-lg">Post to LFG Board</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Game Log Modal -->
+    <div id="modal-log-game" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
+        <div class="bg-cardbg border border-slate-800 w-full max-w-md rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+            <button onclick="closeLogGameModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+            <h3 class="text-xl font-bold text-white mb-4"><i class="fa-solid fa-dice-d6 text-accent mr-2"></i>Log Played Game</h3>
+            <form onsubmit="handleLogGameSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Board / Tabletop Game Name</label>
+                    <input type="text" id="log-game-title" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., Wingspan, Gloomhaven, Ticket to Ride">
+                </div>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Your Score / Result</label>
+                        <input type="text" id="log-game-score" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="e.g., 74 pts / Victory">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Player Count</label>
+                        <input type="number" min="1" max="20" id="log-game-players" required class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" value="4">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Session Notes (Optional)</label>
+                    <textarea id="log-game-notes" rows="2" class="w-full bg-slate-900 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-white focus:border-accent focus:outline-none" placeholder="Epic comeback on the final turn!"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-accent hover:bg-accenthover text-white font-semibold py-3 rounded-xl transition shadow-lg">Submit & Earn XP</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Banner -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-slate-800 border border-slate-700 text-white px-5 py-3 rounded-2xl shadow-2xl flex items-center space-x-3">
+        <i id="toast-icon" class="fa-solid fa-circle-check text-emerald-400 text-lg"></i>
+        <span id="toast-msg" class="text-sm font-medium">Notification message</span>
+    </div>
+
+    <footer class="bg-cardbg border-t border-slate-800 py-8 mt-12 text-center text-xs text-slate-400">
+        <div class="max-w-7xl mx-auto px-4 space-y-3">
+            <p class="font-semibold text-slate-300">Antelope Valley Tabletop Club (AVTC) • Lancaster, CA</p>
+            <p>Gathering tabletop enthusiasts across the Antelope Valley and LA County.</p>
+            <div class="flex justify-center space-x-6 pt-2">
+                <a href="https://www.facebook.com/groups/1800950113762513/" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-facebook mr-1"></i> Facebook Group</a>
+                <a href="https://discord.gg/pBcqsPMYbk" target="_blank" class="hover:text-white transition"><i class="fa-brands fa-discord mr-1"></i> Discord Server</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://cizwgastmjxupnyrwwoq.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_udOIKINsu3-rZnyp9OiFnA_4qSNZxue';
+        
+        let supabaseClient = null;
+        let isOnlineDb = false;
+        let currentUser = null;
+        let authMode = 'login'; // 'login' or 'signup'
+
+        // Local Fallback Mock Data stores
+        let localMeetups = [
+            { id: '1', title: 'Lancaster Weekly Board Game Night', date: '2026-04-10T18:00', location: 'AV Community Center, Lancaster', description: 'Bring your favorite Eurogames or party games! All skill levels welcome.', author: 'AVTC Admin' },
+            { id: '2', title: 'Friday Night Magic & Commander', date: '2026-04-12T17:30', location: 'Quartz Hill Game Lounge', description: 'Commander pods and casual drafts. Proxies friendly for casual decks.', author: 'Local Organizer' }
+        ];
+
+        let localLfg = [
+            { id: '1', game: 'D&D 5e: Curse of Strahd', players: 'Looking for 1-2 players', location: 'West Lancaster', description: 'We meet every other Tuesday evening. Campaign is currently mid-tier (Level 6).', author: 'DM Sarah' },
+            { id: '2', game: 'Twilight Imperium 4th Ed', players: 'Need 3 more captains', location: 'Palmdale / Lancaster border', description: 'Planning an epic Saturday showdown with the Prophecy of Kings expansion.', author: 'Commander Dave' }
+        ];
+
+        let localLogs = [
+            { id: '1', game: 'Wingspan', score: '82 pts', players: 4, notes: 'Fascinating bird engine build!', author: 'Jessica M.', date: 'Yesterday' },
+            { id: '2', game: 'Catan', score: '10 VP (Win)', players: 3, notes: 'Longest road secured on turn 9.', author: 'Marcus V.', date: '2 days ago' }
+        ];
+
+        // Achievement Badges definitions
+        const ACHIEVEMENTS = [
+            { id: 'first_game', name: 'First Roll', desc: 'Log your very first played game.', icon: 'fa-dice-one', countNeeded: 1 },
+            { id: 'board_gamer', name: 'Tabletop Regular', desc: 'Log 3 played game sessions.', icon: 'fa-chess-board', countNeeded: 3 },
+            { id: 'social_butterfly', name: 'Meetup Pioneer', desc: 'Host a club meetup or post an LFG listing.', icon: 'fa-bullhorn', countNeeded: 1 },
+            { id: 'dice_master', name: 'Polyhedral Master', desc: 'Log 5 played games.', icon: 'fa-dice-d20', countNeeded: 5 },
+            { id: 'avtc_legend', name: 'AVTC Legend', desc: 'Log 10 games and engage with community.', icon: 'fa-crown', countNeeded: 10 }
+        ];
+
+        // Initialize Supabase and App on Load
+        window.addEventListener('DOMContentLoaded', async () => {
+            initSupabase();
+            setupTabs();
+            await checkUserSession();
+            loadAllData();
+            loadRememberedEmail();
+        });
+
+        function initSupabase() {
+            try {
+                if (window.supabase && SUPABASE_URL && SUPABASE_KEY) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                    testConnection();
+                } else {
+                    setOfflineMode("Supabase SDK not loaded or keys missing.");
+                }
+            } catch (e) {
+                console.warn("Supabase init error:", e);
+                setOfflineMode("Exception during initialization.");
+            }
+        }
+
+        async function testConnection() {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            const statusSub = document.getElementById('status-sub');
+            
+            statusDot.className = "h-3 w-3 rounded-full bg-amber-400 animate-pulse";
+            statusText.textContent = "Connecting to Supabase...";
+            statusSub.textContent = "Verifying keys and database responsiveness...";
+
+            if (!supabaseClient) {
+                setOfflineMode("Supabase client is uninitialized.");
+                return;
+            }
+
+            try {
+                const { data, error } = await supabaseClient.auth.getSession();
+                if (error && error.status === 401) {
+                    throw new Error("Invalid API key or unauthorized project.");
+                }
+                
+                isOnlineDb = true;
+                statusDot.className = "h-3 w-3 rounded-full bg-emerald-400";
+                statusText.textContent = "Connected to Supabase (Online Mode Active)";
+                statusSub.textContent = "Live database sync active for Lancaster AVTC members.";
+                showToast("Connected successfully to Supabase!", "success");
+                loadAllData();
+            } catch (err) {
+                console.warn("Supabase connection fallback triggered:", err.message);
+                setOfflineMode("Using resilient local testing mode (LocalStorage fallback).");
+            }
+        }
+
+        function setOfflineMode(reason) {
+            isOnlineDb = false;
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            const statusSub = document.getElementById('status-sub');
+            
+            statusDot.className = "h-3 w-3 rounded-full bg-blue-400";
+            statusText.textContent = "Offline Test Mode (LocalStorage Enabled)";
+            statusSub.textContent = reason + " All features fully operable locally.";
+            loadAllData();
+        }
+
+        // Tab Navigation Controller
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                if(btn.dataset.tab === tabId) {
+                    btn.classList.add('bg-slate-800', 'text-white');
+                } else {
+                    btn.classList.remove('bg-slate-800', 'text-white');
+                }
+            });
+
+            document.querySelectorAll('.mob-btn').forEach(btn => {
+                if(btn.dataset.tab === tabId) {
+                    btn.classList.add('text-accent');
+                } else {
+                    btn.classList.remove('text-accent');
+                }
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function setupTabs() {
+            switchTab('home');
+        }
+
+        async function checkUserSession() {
+            if (isOnlineDb && supabaseClient) {
+                const { data: { session } } = await supabaseClient.auth.getSession();
+                if (session && session.user) {
+                    currentUser = session.user;
+                }
+            } else {
+                const localUserStr = localStorage.getItem('avtc_local_user');
+                if (localUserStr) {
+                    currentUser = JSON.parse(localUserStr);
+                }
+            }
+            updateAuthUI();
+        }
+
+        function updateAuthUI() {
+            const authContainer = document.getElementById('auth-container');
+            const btnCreateMeetup = document.getElementById('btn-create-meetup');
+            const btnCreateLfg = document.getElementById('btn-create-lfg');
+            const btnLogGame = document.getElementById('btn-log-game');
+            const profileStats = document.getElementById('user-profile-stats');
+
+            if (currentUser) {
+                const identifier = currentUser.email || currentUser.username || 'Member';
+                authContainer.innerHTML = `
+                    <div class="flex items-center space-x-3 bg-slate-900/80 border border-slate-800 px-3 py-1.5 rounded-xl">
+                        <span class="text-xs text-slate-300 font-medium hidden sm:inline"><i class="fa-solid fa-user-circle text-accent mr-1.5"></i>${identifier}</span>
+                        <button onclick="handleLogout()" class="text-xs bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2.5 py-1.5 rounded-lg transition font-semibold"><i class="fa-solid fa-right-from-bracket"></i></button>
+                    </div>
+                `;
+                btnCreateMeetup.classList.remove('hidden');
+                btnCreateLfg.classList.remove('hidden');
+                btnLogGame.classList.remove('hidden');
+                profileStats.classList.remove('hidden');
+                renderUserStats();
+            } else {
+                authContainer.innerHTML = `
+                    <button onclick="openAuthModal('login')" class="bg-accent hover:bg-accenthover text-white px-4 py-2 rounded-xl text-sm font-semibold transition shadow-md shadow-accent/20">
+                        <i class="fa-solid fa-right-to-bracket mr-1.5"></i>Sign In
+                    </button>
+                `;
+                btnCreateMeetup.classList.add('hidden');
+                btnCreateLfg.classList.add('hidden');
+                btnLogGame.classList.add('hidden');
+                profileStats.classList.add('hidden');
+            }
+        }
+
+        function openAuthModal(mode) {
+            authMode = mode;
+            const modal = document.getElementById('modal-auth');
+            const title = document.getElementById('auth-title');
+            const submitBtn = document.getElementById('auth-submit-btn');
+            const switchText = document.getElementById('auth-switch-text');
+            const switchBtn = document.getElementById('auth-switch-btn');
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.classList.add('hidden');
+
+            if (mode === 'login') {
+                title.textContent = "Sign In to AVTC";
+                submitBtn.textContent = "Sign In";
+                switchText.textContent = "Don't have an account?";
+                switchBtn.textContent = "Create Account";
+            } else {
+                title.textContent = "Create AVTC Account";
+                submitBtn.textContent = "Register Account";
+                switchText.textContent = "Already have an account?";
+                switchBtn.textContent = "Sign In";
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeAuthModal() {
+            document.getElementById('modal-auth').classList.add('hidden');
+        }
+
+        function toggleAuthMode() {
+            openAuthModal(authMode === 'login' ? 'signup' : 'login');
+        }
+
+        function loadRememberedEmail() {
+            const remembered = localStorage.getItem('avtc_remembered_email');
+            if (remembered) {
+                const emailInput = document.getElementById('auth-email');
+                const rememberCheckbox = document.getElementById('remember-login');
+                if (emailInput) emailInput.value = remembered;
+                if (rememberCheckbox) rememberCheckbox.checked = true;
+            }
+        }
+
+        async function handleAuthSubmit(e) {
+            e.preventDefault();
+            const email = document.getElementById('auth-email').value;
+            const password = document.getElementById('auth-password').value;
+            const rememberMe = document.getElementById('remember-login').checked;
+            const errorDiv = document.getElementById('auth-error');
+            errorDiv.classList.add('hidden');
+
+            if (rememberMe) {
+                localStorage.setItem('avtc_remembered_email', email);
+            } else {
+                localStorage.removeItem('avtc_remembered_email');
+            }
+
+            if (isOnlineDb && supabaseClient) {
+                try {
+                    if (authMode === 'login') {
+                        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+                        if (error) throw error;
+                        currentUser = data.user;
+                        showToast("Successfully signed in!", "success");
+                    } else {
+                        const { data, error } = await supabaseClient.auth.signUp({ email, password });
+                        if (error) throw error;
+                        currentUser = data.user;
+                        showToast("Account created successfully!", "success");
+                    }
+                    closeAuthModal();
+                    updateAuthUI();
+                    loadAllData();
+                } catch (err) {
+                    errorDiv.textContent = err.message || "Authentication error. Please check your credentials.";
+                    errorDiv.classList.remove('hidden');
+                }
+            } else {
+                if (authMode === 'signup') {
+                    const newUser = { id: 'local_' + Date.now(), email: email };
+                    localStorage.setItem('avtc_local_user', JSON.stringify(newUser));
+                    currentUser = newUser;
+                    showToast("Account created in local test mode!", "success");
+                } else {
+                    const localUser = { id: 'local_user', email: email };
+                    localStorage.setItem('avtc_local_user', JSON.stringify(localUser));
+                    currentUser = localUser;
+                    showToast("Signed in (Local Fallback Mode)!", "success");
+                }
+                closeAuthModal();
+                updateAuthUI();
+                loadAllData();
+            }
+        }
+
+        async function handleForgotEmail() {
+            const emailInput = document.getElementById('auth-email').value.trim();
+            if (isOnlineDb && supabaseClient) {
+                if (!emailInput) {
+                    showToast("Please enter your email address first to recover credentials.", "info");
+                    return;
+                }
+                try {
+                    const { error } = await supabaseClient.auth.resetPasswordForEmail(emailInput);
+                    if (error) throw error;
+                    showToast("Password recovery / email reminder link sent!", "success");
+                } catch (err) {
+                    showToast("Error: " + err.message, "info");
+                }
+            } else {
+                const remembered = localStorage.getItem('avtc_remembered_email');
+                if (remembered) {
+                    showToast("Remembered email found: " + remembered, "success");
+                    document.getElementById('auth-email').value = remembered;
+                } else {
+                    showToast("No saved email found in local storage.", "info");
+                }
+            }
+        }
+
+        async function handleLogout() {
+            if (isOnlineDb && supabaseClient) {
+                await supabaseClient.auth.signOut();
+            }
+            localStorage.removeItem('avtc_local_user');
+            currentUser = null;
+            updateAuthUI();
+            showToast("Signed out successfully.", "info");
+        }
+
+        function loadAllData() {
+            renderMeetups();
+            renderLfg();
+            renderGameLogs();
+        }
+
+        // --- MEETUPS ---
+        function openMeetupModal() { document.getElementById('modal-meetup').classList.remove('hidden'); }
+        function closeMeetupModal() { document.getElementById('modal-meetup').classList.add('hidden'); }
+
+        async function handleCreateMeetup(e) {
+            e.preventDefault();
+            const title = document.getElementById('meetup-title').value;
+            const date = document.getElementById('meetup-date').value;
+            const location = document.getElementById('meetup-location').value;
+            const description = document.getElementById('meetup-desc').value;
+            const author = currentUser ? (currentUser.email || 'Club Member') : 'Anonymous';
+
+            const newMeetup = { id: Date.now().toString(), title, date, location, description, author };
+
+            if (isOnlineDb && supabaseClient) {
+                try {
+                    const { error } = await supabaseClient.from('meetups').insert([newMeetup]);
+                    if (error) throw error;
+                } catch (err) {
+                    console.warn("Supabase meetup insert failed, saving locally:", err.message);
+                }
+            }
+            
+            localMeetups.unshift(newMeetup);
+            localStorage.setItem('avtc_meetups', JSON.stringify(localMeetups));
+            
+            closeMeetupModal();
+            e.target.reset();
+            renderMeetups();
+            checkAndAwardAchievements('meetup');
+            showToast("Meetup event posted successfully!", "success");
+        }
+
+        function renderMeetups() {
+            const container = document.getElementById('meetups-list');
+            const saved = localStorage.getItem('avtc_meetups');
+            if (saved) localMeetups = JSON.parse(saved);
+
+            if (localMeetups.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">No upcoming meetups scheduled yet. Host the first one!</div>`;
+                return;
+            }
+
+            container.innerHTML = localMeetups.map(m => {
+                const dateFormatted = m.date ? new Date(m.date).toLocaleString('en-US', { dateStyle: 'medium', timeStyle: 'short' }) : 'TBD';
+                return `
+                    <div class="bg-cardbg rounded-2xl border border-slate-800 p-6 shadow-lg flex flex-col justify-between hover:border-slate-700 transition">
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <span class="bg-accent/10 text-accent text-xs px-2.5 py-1 rounded-lg font-semibold"><i class="fa-solid fa-calendar mr-1.5"></i>Meetup</span>
+                                <span class="text-xs text-slate-400">By ${m.author || 'Member'}</span>
+                            </div>
+                            <h3 class="text-lg font-bold text-white mb-2">${escapeHtml(m.title)}</h3>
+                            <p class="text-sm text-slate-300 mb-4 line-clamp-3">${escapeHtml(m.description)}</p>
+                        </div>
+                        <div class="space-y-3 pt-4 border-t border-slate-800/80">
+                            <div class="flex items-center text-xs text-slate-400"><i class="fa-regular fa-clock w-5 text-indigo-400"></i>${dateFormatted}</div>
+                            <div class="flex items-center justify-between text-xs text-slate-400">
+                                <span><i class="fa-solid fa-location-dot w-5 text-rose-400 mr-1"></i>${escapeHtml(m.location)}</span>
+                                <button onclick="deleteEvent('${m.id}')" class="delete-event-btn text-xs bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg transition font-semibold" style="display: none;" disabled>
+                                    <i class="fa-solid fa-trash mr-1"></i>Delete
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Re-check permissions immediately after rendering cards to apply correct visibility to delete buttons
+            checkUserPermissions();
+        }
+
+        // --- LFG BOARD ---
+        function openLfgModal() { document.getElementById('modal-lfg').classList.remove('hidden'); }
+        function closeLfgModal() { document.getElementById('modal-lfg').classList.add('hidden'); }
+
+        async function handleCreateLfg(e) {
+            e.preventDefault();
+            const game = document.getElementById('lfg-game').value;
+            const players = document.getElementById('lfg-players').value;
+            const location = document.getElementById('lfg-location').value;
+            const description = document.getElementById('lfg-desc').value;
+            const author = currentUser ? (currentUser.email || 'Club Member') : 'Anonymous';
+
+            const newLfg = { id: Date.now().toString(), game, players, location, description, author };
+
+            if (isOnlineDb && supabaseClient) {
+                try {
+                    const { error } = await supabaseClient.from('lfg_listings').insert([newLfg]);
+                    if (error) throw error;
+                } catch (err) {
+                    console.warn("Supabase LFG insert failed, saving locally:", err.message);
+                }
+            }
+
+            localLfg.unshift(newLfg);
+            localStorage.setItem('avtc_lfg', JSON.stringify(localLfg));
+
+            closeLfgModal();
+            e.target.reset();
+            renderLfg();
+            checkAndAwardAchievements('lfg');
+            showToast("LFG listing posted successfully!", "success");
+        }
+
+        function renderLfg() {
+            const container = document.getElementById('lfg-list');
+            const saved = localStorage.getItem('avtc_lfg');
+            if (saved) localLfg = JSON.parse(saved);
+
+            if (localLfg.length === 0) {
+                container.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500">No active LFG listings right now.</div>`;
+                return;
+            }
+
+            container.innerHTML = localLfg.map(l => `
+                <div class="bg-cardbg rounded-2xl border border-slate-800 p-6 shadow-lg flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-emerald-500/10 text-emerald-400 text-xs px-2.5 py-1 rounded-lg font-semibold"><i class="fa-solid fa-dice-d20 mr-1.5"></i>${escapeHtml(l.game)}</span>
+                            <span class="text-xs bg-indigo-500/10 text-indigo-400 px-2 py-0.5 rounded">${escapeHtml(l.players)}</span>
+                        </div>
+                        <p class="text-sm text-slate-300 mb-4">${escapeHtml(l.description)}</p>
+                    </div>
+                    <div class="flex items-center justify-between pt-4 border-t border-slate-800/80 text-xs text-slate-400">
+                        <span><i class="fa-solid fa-location-dot text-rose-400 mr-1.5"></i>${escapeHtml(l.location)}</span>
+                        <span>Posted by <strong class="text-slate-300">${escapeHtml(l.author)}</strong></span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // --- GAME STATS & ACHIEVEMENTS ---
+        function openLogGameModal() { document.getElementById('modal-log-game').classList.remove('hidden'); }
+        function closeLogGameModal() { document.getElementById('modal-log-game').classList.add('hidden'); }
+
+        async function handleLogGameSubmit(e) {
+            e.preventDefault();
+            const game = document.getElementById('log-game-title').value;
+            const score = document.getElementById('log-game-score').value;
+            const players = parseInt(document.getElementById('log-game-players').value);
+            const notes = document.getElementById('log-game-notes').value;
+            const author = currentUser ? (currentUser.email || 'Club Member') : 'Anonymous';
+
+            const newLog = { id: Date.now().toString(), game, score, players, notes, author, date: 'Just now' };
+
+            if (isOnlineDb && supabaseClient) {
+                try {
+                    const { error } = await supabaseClient.from('game_logs').insert([newLog]);
+                    if (error) throw error;
+                } catch (err) {
+                    console.warn("Supabase game log insert failed, saving locally:", err.message);
+                }
+            }
+
+            localLogs.unshift(newLog);
+            localStorage.setItem('avtc_logs', JSON.stringify(localLogs));
+
+            let userLogsCount = parseInt(localStorage.getItem('avtc_user_games_count') || '0') + 1;
+            localStorage.setItem('avtc_user_games_count', userLogsCount);
+
+            closeLogGameModal();
+            e.target.reset();
+            renderGameLogs();
+            renderUserStats();
+            showToast("Game logged successfully! XP earned.", "success");
+        }
+
+        function renderGameLogs() {
+            const container = document.getElementById('game-logs-list');
+            const saved = localStorage.getItem('avtc_logs');
+            if (saved) localLogs = JSON.parse(saved);
+
+            if (localLogs.length === 0) {
+                container.innerHTML = `<div class="text-center py-6 text-slate-500 text-sm">No game sessions logged yet.</div>`;
+                return;
+            }
+
+            container.innerHTML = localLogs.map(g => `
+                <div class="bg-slate-900/60 p-4 rounded-xl border border-slate-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+                    <div class="space-y-1">
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-white text-sm"><i class="fa-solid fa-chess text-accent mr-1.5"></i>${escapeHtml(g.game)}</span>
+                            <span class="text-xs bg-slate-800 px-2 py-0.5 rounded text-slate-300">Result: ${escapeHtml(g.score)}</span>
+                        </div>
+                        ${g.notes ? `<p class="text-xs text-slate-400 italic">"${escapeHtml(g.notes)}"</p>` : ''}
+                    </div>
+                    <div class="text-xs text-slate-400 text-right">
+                        <div>Played with <span class="text-slate-200 font-medium">${g.players} players</span></div>
+                        <div class="text-slate-500">By ${escapeHtml(g.author)} • ${g.date}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderUserStats() {
+            const count = parseInt(localStorage.getItem('avtc_user_games_count') || '0');
+            document.getElementById('stat-total-games').textContent = count;
+
+            let unlockedCount = 0;
+            const badgesGrid = document.getElementById('badges-grid');
+            
+            badgesGrid.innerHTML = ACHIEVEMENTS.map(badge => {
+                const isUnlocked = count >= badge.countNeeded;
+                if (isUnlocked) unlockedCount++;
+                return `
+                    <div class="bg-slate-900/80 border ${isUnlocked ? 'border-amber-500/40 bg-amber-500/5' : 'border-slate-800 opacity-50'} p-4 rounded-xl text-center flex flex-col items-center justify-center">
+                        <div class="w-10 h-10 rounded-xl ${isUnlocked ? 'bg-amber-500/20 text-amber-400' : 'bg-slate-800 text-slate-500'} flex items-center justify-center text-lg mb-2">
+                            <i class="fa-solid ${badge.icon}"></i>
+                        </div>
+                        <h5 class="text-xs font-bold text-white mb-0.5">${badge.name}</h5>
+                        <p class="text-[10px] text-slate-400">${badge.desc}</p>
+                    </div>
+                `;
+            }).join('');
+
+            document.getElementById('stat-total-badges').textContent = `${unlockedCount} / ${ACHIEVEMENTS.length}`;
+        }
+
+        function checkAndAwardAchievements(actionType) {
+            if (actionType === 'meetup' || actionType === 'lfg') {
+                localStorage.setItem('avtc_hosted_activity', 'true');
+            }
+            renderUserStats();
+        }
+
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-msg');
+            const toastIcon = document.getElementById('toast-icon');
+
+            toastMsg.textContent = message;
+            if (type === 'success') {
+                toastIcon.className = "fa-solid fa-circle-check text-emerald-400 text-lg";
+            } else {
+                toastIcon.className = "fa-solid fa-circle-info text-blue-400 text-lg";
+            }
+
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+
+        // --- INTEGRATED ADMIN PERMISSIONS & DELETION CODE ---
+
+        // 1. Check current session and admin status on page load or login
+        async function checkUserPermissions() {
+            if (!supabaseClient) {
+                toggleAdminFeatures(false);
+                return;
+            }
+            const { data: { session }, error } = await supabaseClient.auth.getSession();
+            
+            if (error || !session) {
+                console.log("No active user session.");
+                toggleAdminFeatures(false);
+                return;
+            }
+
+            const user = session.user;
+            
+            // Check if the email matches or if the role in metadata is set to 'admin'
+            const isAdmin = user.email === 'maunderingcabal@gmail.com' || user.user_metadata?.role === 'admin';
+
+            toggleAdminFeatures(isAdmin);
+        }
+
+        // 2. Enable or disable delete buttons/features in your HTML UI
+        function toggleAdminFeatures(isAdmin) {
+            const deleteButtons = document.querySelectorAll('.delete-event-btn');
+            
+            deleteButtons.forEach(btn => {
+                if (isAdmin) {
+                    btn.style.display = 'inline-block';
+                    btn.removeAttribute('disabled');
+                } else {
+                    btn.style.display = 'none';
+                    btn.setAttribute('disabled', 'true');
+                }
+            });
+
+            console.log(isAdmin ? "Logged in as Admin: Delete enabled." : "Standard user view.");
+        }
+
+        // 3. Secure event deletion function that double-checks auth state before hitting database
+        async function deleteEvent(eventId) {
+            if (!supabaseClient) {
+                alert("Database client not active.");
+                return;
+            }
+            
+            const { data: { session } } = await supabaseClient.auth.getSession();
+            const user = session?.user;
+            
+            const isAdmin = user?.email === 'maunderingcabal@gmail.com' || user?.user_metadata?.role === 'admin';
+
+            if (!isAdmin) {
+                alert("Unauthorized: You do not have permission to delete events.");
+                return;
+            }
+
+            // Proceed with deletion query on your meetups/events table
+            const { error } = await supabaseClient
+                .from('meetups') 
+                .delete()
+                .eq('id', eventId);
+
+            if (error) {
+                console.error("Error deleting event:", error.message);
+                showToast("Error deleting event: " + error.message, "info");
+            } else {
+                console.log("Event successfully deleted.");
+                localMeetups = localMeetups.filter(m => m.id !== eventId);
+                localStorage.setItem('avtc_meetups', JSON.stringify(localMeetups));
+                renderMeetups();
+                showToast("Meetup event successfully deleted.", "success");
+            }
+        }
+
+        // Run on page load & listen for auth changes
+        window.addEventListener('DOMContentLoaded', checkUserPermissions);
+        if (window.supabase) {
+            // Safe subscription check if client is initialized
+            setTimeout(() => {
+                if (supabaseClient) {
+                    supabaseClient.auth.onAuthStateChange((_event, session) => {
+                        checkUserPermissions();
+                    });
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
